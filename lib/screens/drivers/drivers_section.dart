@@ -166,7 +166,7 @@ class ListOfDriversAnDetails extends StatelessWidget {
                 color: AppThemeColours.appGreyBGColour.withOpacity(0.8),
                 blurRadius: 32.0.sp)
           ]),
-      duration: const Duration(milliseconds: 650),
+      duration: const Duration(milliseconds: 450),
       curve: Curves.fastOutSlowIn,
       height: height ?? 500.0.h,
       width: 350.0.w,

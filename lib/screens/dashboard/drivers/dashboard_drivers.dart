@@ -59,7 +59,7 @@ class _DashboardDriversState extends State<DashboardDrivers> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 650),
+      duration: const Duration(milliseconds: 450),
       curve: Curves.fastOutSlowIn,
       width: 400.0.w,
       height: widget.height ?? 500.0.h,
