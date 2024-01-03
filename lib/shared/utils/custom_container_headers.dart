@@ -36,15 +36,17 @@ class CustomContainerHeaders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //! TEXT STYLE
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     return AppFadeAnimation(
         delay: 1.2,
         child: Row(children: [
           //! TITLE
-          Text(title,
-              style: textTheme.displayLarge!.copyWith(fontSize: 21.0.sp)),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontSize: 18.0.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
 
           //! SPACER
           const Spacer(),

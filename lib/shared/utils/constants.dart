@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
+import 'package:urban_transit_admin/theme/theme.dart';
 
 class AppConstants {
   const AppConstants._();
@@ -21,4 +22,23 @@ class AppConstants {
       borderRadius: BorderRadius.circular(10.0.r),
     ),
   );
+
+  //! WIDGET MINIMIZE / MAXIMIZE BUTTONS NEEDS
+  static const List<IconData> menuIcons = [
+    Icons.remove,
+    Icons.open_in_full,
+    Icons.close
+  ];
+
+  static final List<Color> menuIconColours = [
+    Colors.grey.shade800,
+    AppThemeColours.appGreen,
+    AppThemeColours.appRed
+  ];
+
+  static const List<Color> menuIconBGColour = [
+    AppThemeColours.appGreyBGColour,
+    AppThemeColours.appGreenTransparent,
+    AppThemeColours.appRedTransparent
+  ];
 }

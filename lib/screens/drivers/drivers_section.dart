@@ -1,122 +1,117 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:urban_transit_admin/screens/widgets/call_dialogue.dart';
+import 'package:urban_transit_admin/services/controllers/drivers_page_widget_controller.dart';
+import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_images.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/shared/utils/profile_image.dart';
 import 'package:urban_transit_admin/screens/dashboard/messaging/inbox_view.dart';
-import 'package:urban_transit_admin/screens/dashboard/widget/app_multi_value_listenable_builder.dart';
 import 'package:urban_transit_admin/screens/drivers/widget/add_driver.dart';
 import 'package:urban_transit_admin/screens/drivers/widget/show_driver_details.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
-class DriversSection extends StatefulWidget {
+class DriversSection extends ConsumerWidget {
   const DriversSection({super.key});
 
   @override
-  State<DriversSection> createState() => _DriversSectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final driversPageDriversWidgetState =
+        ref.watch(driversPageDriversWidgetController);
+    final driversPageInboxWidgetState =
+        ref.watch(driversPageInboxWidgetController);
 
-class _DriversSectionState extends State<DriversSection> {
-//! DRAWER SIZE
-  double drawerWidth = 200.0.w;
-  double? positionedLeft = 185.0.w;
-  double? positionedRight = 10.0.w;
-  ValueNotifier<bool> isMaximized = ValueNotifier(false);
-  ValueNotifier<bool> isClosed = ValueNotifier(false);
-  ValueNotifier<bool> isDriverMaximized = ValueNotifier(false);
-  ValueNotifier<bool> isDriverClosed = ValueNotifier(false);
-
-  @override
-  Widget build(BuildContext context) {
     return Padding(
       padding: AppScreenUtils.containerPadding,
       child: Stack(children: [
         //! MESSAGES
-        AppFadeAnimation(
-            delay: 1.8,
-            child: AppMultiListenableProvider(
-              firstValue: isMaximized,
-              secondValue: isClosed,
-              child: const SizedBox.shrink(),
-              builder: (context, firstValue, secondValue, child) => Align(
-                  alignment: Alignment.topRight,
-                  child: ValueListenableBuilder(
-                      valueListenable: isDriverMaximized,
-                      child: const SizedBox.shrink(),
-                      //! INBOX VIEW
-                      builder: (context, value, widget) => DashboardInboxView(
-                          height: (isMaximized.value == true &&
-                                  isClosed.value == false)
-                              ? MediaQuery.of(context).size.height
-                              : (isMaximized.value == false &&
-                                      isClosed.value == true)
-                                  ? MediaQuery.of(context).size.height * 0.1
-                                  : (isDriverMaximized.value == true &&
-                                          isMaximized.value == true)
-                                      ? MediaQuery.of(context).size.height *
-                                          0.95
-                                      : null,
+        driversPageInboxWidgetState.when(
+          data: (widgetState) {
+            return AppFadeAnimation(
+              delay: 2.4,
+              child: AnimatedAlign(
+                alignment: Alignment.topRight,
+                duration: const Duration(milliseconds: 450),
+                curve: Curves.fastOutSlowIn,
 
-                          //! MINIMIZE WIDGET
-                          minimize: () => {
-                                isMaximized.value = false,
-                                isClosed.value = false
-                              },
+                //! INBOX
+                child: DashboardInboxView(
+                  height: widgetState == DriversPageInboxWidgetState.isMaximized
+                      ? MediaQuery.of(context).size.height
+                      : widgetState == DriversPageInboxWidgetState.isClosed
+                          ? MediaQuery.of(context).size.height * 0.1
+                          : MediaQuery.of(context).size.height * 0.45,
 
-                          //! MAXIMIZE WIDGET
-                          maximize: () => isDriverMaximized.value == false
-                              ? {
-                                  isMaximized.value = true,
-                                  isClosed.value = false
-                                }
-                              : {},
+                  //! MINIMIZE WIDGET
+                  minimize: () => ref
+                      .read(driversPageInboxWidgetController.notifier)
+                      .updateWidgetState(
+                        newState: DriversPageInboxWidgetState.normal,
+                      ),
 
-                          //! CLOSE WIDGET
-                          close: () => {
-                                isMaximized.value = false,
-                                isClosed.value = true
-                              }))),
-            )),
+                  //! MAXIMIZE WIDGET
+                  maximize: () => ref
+                      .read(driversPageInboxWidgetController.notifier)
+                      .updateWidgetState(
+                        newState: DriversPageInboxWidgetState.isMaximized,
+                      ),
+
+                  //! CLOSE WIDGET
+                  close: () => ref
+                      .read(driversPageInboxWidgetController.notifier)
+                      .updateWidgetState(
+                        newState: DriversPageInboxWidgetState.isClosed,
+                      ),
+                ),
+              ),
+            );
+          },
+          error: (error, stackTrace) => "$error $stackTrace".txt(),
+          loading: () => const CircularProgressIndicator(),
+        ),
 
         //! LIST OF DRIVERS
-        AppFadeAnimation(
+        driversPageDriversWidgetState.when(
+          data: (widgetState) => AppFadeAnimation(
             delay: 2.7,
             child: Align(
-                alignment: Alignment.topLeft,
-                child: ListOfDriversAnDetails(
-                    height: (isDriverMaximized.value == true &&
-                            isDriverClosed.value == false)
-                        ? MediaQuery.of(context).size.height
-                        : (isDriverMaximized.value == false &&
-                                isDriverClosed.value == true)
-                            ? MediaQuery.of(context).size.height * 0.1
-                            : (isDriverMaximized.value == true &&
-                                    isDriverMaximized.value == true)
-                                ? MediaQuery.of(context).size.height * 0.95
-                                : null,
+              alignment: Alignment.topLeft,
+              child: ListOfDriversAnDetails(
+                height: widgetState == DriversPageDriversWidgetState.isMaximized
+                    ? MediaQuery.of(context).size.height
+                    : widgetState == DriversPageDriversWidgetState.isClosed
+                        ? MediaQuery.of(context).size.height * 0.1
+                        : MediaQuery.of(context).size.height * 0.45,
 
-                    //! MINIMIZE WIDGET
-                    minimize: () => setState(() => {
-                          isDriverMaximized.value = false,
-                          isDriverClosed.value = false
-                        }),
+                //! MINIMIZE WIDGET
+                minimize: () => ref
+                    .read(driversPageDriversWidgetController.notifier)
+                    .updateWidgetState(
+                      newState: DriversPageDriversWidgetState.normal,
+                    ),
 
-                    //! MAXIMIZE WIDGET
-                    maximize: () => isDriverMaximized.value == false
-                        ? setState(() => {
-                              isDriverMaximized.value = true,
-                              isDriverClosed.value = false
-                            })
-                        : {},
+                //! MAXIMIZE WIDGET
+                maximize: () => ref
+                    .read(driversPageDriversWidgetController.notifier)
+                    .updateWidgetState(
+                      newState: DriversPageDriversWidgetState.isMaximized,
+                    ),
 
-                    //! CLOSE WIDGET
-                    close: () => setState(() => {
-                          isDriverMaximized.value = false,
-                          isDriverClosed.value = true
-                        }))))
+                //! CLOSE WIDGET
+                close: () => ref
+                    .read(driversPageDriversWidgetController.notifier)
+                    .updateWidgetState(
+                      newState: DriversPageDriversWidgetState.isClosed,
+                    ),
+              ),
+            ),
+          ),
+          error: (error, stackTrace) => "$error $stackTrace".txt(),
+          loading: () => const CircularProgressIndicator(),
+        ),
       ]),
     );
   }
@@ -157,7 +152,7 @@ class ListOfDriversAnDetails extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return AnimatedContainer(
-      padding: AppScreenUtils.containerPaddingCustom,
+      padding: AppScreenUtils.containerPaddingSmall,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0.r),
           color: AppThemeColours.appWhiteBGColour,
@@ -175,8 +170,13 @@ class ListOfDriversAnDetails extends StatelessWidget {
               delay: 1.2,
               child: Row(children: [
                 //! TITLE
-                Text(AppTexts.drivers,
-                    style: textTheme.displayLarge!.copyWith(fontSize: 21.0.sp)),
+                Text(
+                  AppTexts.drivers,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: 18.0.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
 
                 //! SPACER
                 const Spacer(),
@@ -202,9 +202,13 @@ class ListOfDriversAnDetails extends StatelessWidget {
                   delay: 1.2,
                   child: Row(children: [
                     //! TITLE
-                    Text(AppTexts.drivers,
-                        style: textTheme.displayLarge!
-                            .copyWith(fontSize: 21.0.sp)),
+                    Text(
+                      AppTexts.drivers,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 18.0.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
 
                     //! SPACER
                     const Spacer(),
@@ -230,8 +234,12 @@ class ListOfDriversAnDetails extends StatelessWidget {
 
               //! CONTENT - NUMBER OF ACTIVE DRIVERS
               //! TITLE
-              Text("24 ${AppTexts.drivers}",
-                  style: textTheme.displayLarge!.copyWith(fontSize: 16.0.sp)),
+              Text(
+                "24 ${AppTexts.drivers}",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontSize: 16.0.sp,
+                    ),
+              ),
 
               //! SPACER
               AppScreenUtils.verticalSpaceSmall,

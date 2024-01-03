@@ -4,6 +4,7 @@ import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_images.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
+import 'package:urban_transit_admin/shared/utils/constants.dart';
 import 'package:urban_transit_admin/shared/utils/profile_image.dart';
 import 'package:urban_transit_admin/screens/widgets/call_dialogue.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
@@ -27,24 +28,6 @@ class DashboardDrivers extends StatefulWidget {
 
 class _DashboardDriversState extends State<DashboardDrivers> {
   //! DEFINITIONS
-  static const List<IconData> menuIcons = [
-    Icons.remove,
-    Icons.open_in_full,
-    Icons.close
-  ];
-
-  static final List<Color> menuIconColours = [
-    Colors.grey.shade800,
-    AppThemeColours.appGreen,
-    AppThemeColours.appRed
-  ];
-
-  static const List<Color> menuIconBGColour = [
-    AppThemeColours.appGreyBGColour,
-    AppThemeColours.appGreenTransparent,
-    AppThemeColours.appRedTransparent
-  ];
-
   static const List<String> driverNames = [
     "Micheal GotDamn",
     "Ire Okigidi",
@@ -55,9 +38,6 @@ class _DashboardDriversState extends State<DashboardDrivers> {
 
   @override
   Widget build(BuildContext context) {
-    //! TEXT STYLE
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 450),
       curve: Curves.fastOutSlowIn,
@@ -89,19 +69,20 @@ class _DashboardDriversState extends State<DashboardDrivers> {
                 const Spacer(),
 
                 //! BUTTONS - MINIMIZE
-                ...menuIcons.map((icon) => Padding(
+                ...AppConstants.menuIcons.map((icon) => Padding(
                     padding: EdgeInsets.only(right: 6.0.sp),
                     child: InkWell(
                         onTap: () => menuIconOnTapTrigger(
-                            index: menuIcons.indexOf(icon)),
+                            index: AppConstants.menuIcons.indexOf(icon)),
                         child: CircleAvatar(
                             radius: 14.0.r,
-                            backgroundColor: menuIconBGColour
-                                .elementAt(menuIcons.indexOf(icon)),
+                            backgroundColor: AppConstants.menuIconBGColour
+                                .elementAt(
+                                    AppConstants.menuIcons.indexOf(icon)),
                             child: Icon(icon,
                                 size: 12.0.sp,
-                                color: menuIconColours
-                                    .elementAt(menuIcons.indexOf(icon)))))))
+                                color: AppConstants.menuIconColours.elementAt(
+                                    AppConstants.menuIcons.indexOf(icon)))))))
               ]))
           :
 
@@ -113,27 +94,33 @@ class _DashboardDriversState extends State<DashboardDrivers> {
                     delay: 1.2,
                     child: Row(children: [
                       //! TITLE
-                      Text(AppTexts.drivers,
-                          style: textTheme.displayLarge!
-                              .copyWith(fontSize: 21.0.sp)),
+                      Text(
+                        AppTexts.drivers,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontSize: 18.0.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
 
                       //! SPACER
                       const Spacer(),
 
                       //! BUTTONS - MINIMIZE
-                      ...menuIcons.map((icon) => Padding(
+                      ...AppConstants.menuIcons.map((icon) => Padding(
                           padding: EdgeInsets.only(right: 6.0.sp),
                           child: InkWell(
                               onTap: () => menuIconOnTapTrigger(
-                                  index: menuIcons.indexOf(icon)),
+                                  index: AppConstants.menuIcons.indexOf(icon)),
                               child: CircleAvatar(
                                   radius: 14.0.r,
-                                  backgroundColor: menuIconBGColour
-                                      .elementAt(menuIcons.indexOf(icon)),
+                                  backgroundColor: AppConstants.menuIconBGColour
+                                      .elementAt(
+                                          AppConstants.menuIcons.indexOf(icon)),
                                   child: Icon(icon,
                                       size: 12.0.sp,
-                                      color: menuIconColours.elementAt(
-                                          menuIcons.indexOf(icon)))))))
+                                      color: AppConstants.menuIconColours
+                                          .elementAt(AppConstants.menuIcons
+                                              .indexOf(icon)))))))
                     ])),
 
                 //! SPACER
