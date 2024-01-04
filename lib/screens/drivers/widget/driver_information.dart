@@ -17,22 +17,25 @@ class DriverInformation extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            //!SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
             const DriverInformationWidget(
                 title: "Full name", value: "Micheal GotDamn"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Driver’s ID", value: "64538252423"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(title: "Bus Colour", value: "Green"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Current Route", value: "From Hebron Stop"),
@@ -71,21 +74,24 @@ class DriverInformation extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            //!SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
             const DriverInformationWidget(title: "Sex", value: "Male"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Phone Number", value: "080345678696"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(title: "No of Seats", value: "24"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Driver’s Status", value: "Active Driver")
@@ -99,17 +105,20 @@ class DriverInformation extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            //!SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
             const DriverInformationWidget(
                 title: "Date of Birth", value: "17/08/1999"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Email Address", value: "michy1@gmail.com"),
 
             //!SPACER
-            AppScreenUtils.verticalSpaceMedium,
+            AppScreenUtils.verticalSpaceLarge,
 
             const DriverInformationWidget(
                 title: "Bus Number", value: "Ak76854J"),

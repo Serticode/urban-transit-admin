@@ -25,6 +25,9 @@ class InFlow extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Column(children: [
+      //! SPACER
+      AppScreenUtils.verticalSpaceSmall,
+
       //! HEADER
       Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -35,6 +38,9 @@ class InFlow extends StatelessWidget {
               Text("Today’s Inflow",
                   style: textTheme.bodyMedium!.copyWith(
                       color: AppThemeColours.appGreen, fontSize: 24.0.sp)),
+
+              //! SPACER
+              AppScreenUtils.verticalSpaceSmall,
 
               Row(
                   mainAxisAlignment: MainAxisAlignment.start,

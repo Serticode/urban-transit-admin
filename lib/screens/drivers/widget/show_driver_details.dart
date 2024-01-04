@@ -1,6 +1,10 @@
 // ignore_for_file: deprecated_member_use, sdk_version_since
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:urban_transit_admin/services/controllers/drivers_page_controller.dart';
+import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
+import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_images.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
@@ -11,67 +15,90 @@ import 'package:urban_transit_admin/screens/drivers/widget/ride_history.dart';
 import 'package:urban_transit_admin/shared/utils/type_defs.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
-class ShowDriverDetails extends StatelessWidget {
-  const ShowDriverDetails({super.key});
+class ShowDriverDetails extends ConsumerWidget {
+  const ShowDriverDetails({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     //! TEXT STYLE
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return SingleChildScrollView(
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //! BACK ICON AND OTHERS
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //! ICON
-                  InkWell(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                          padding: AppScreenUtils.containerPaddingTiny,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 0.8.sp,
-                                  color: AppThemeColours.appBlue),
-                              borderRadius: BorderRadius.circular(8.r),
-                              color: AppThemeColours.appWhiteBGColour),
-                          child: Row(children: [
-                            Icon(Icons.arrow_back_ios,
-                                size: 18.0.sp, color: AppThemeColours.appBlue),
+    return AppFadeAnimation(
+      delay: 2.4,
+      child: Column(
+        children: [
+          //! ICON
+          SizedBox(
+            width: 117.0.w,
+            child: InkWell(
+              onTap: () => ref
+                  .read(driversPageVisibleWidgetController.notifier)
+                  .setVisibleWidget(
+                    visibleWidget:
+                        DriversPageVisibleWidgetState.driversAndInbox,
+                  ),
+              child: Container(
+                padding: AppScreenUtils.containerPaddingTiny,
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(width: 0.8.sp, color: AppThemeColours.appBlue),
+                  borderRadius: BorderRadius.circular(8.r),
+                  color: AppThemeColours.appWhiteBGColour,
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back,
+                        size: 16.0.sp, color: AppThemeColours.appBlue),
 
-                            //! SPACER
-                            AppScreenUtils.horizontalSpaceSmall,
+                    //! SPACER
+                    AppScreenUtils.horizontalSpaceSmall,
 
-                            Text("All Drivers",
-                                style: textTheme.bodyText1!.copyWith(
-                                    height: 1.0.sp,
-                                    fontSize: 16.0.sp,
-                                    color: AppThemeColours.appBlue))
-                          ]))),
+                    Text(
+                      "All Drivers",
+                      style: textTheme.bodyText1!.copyWith(
+                        height: 1.0.sp,
+                        fontSize: 14.0.sp,
+                        color: AppThemeColours.appBlue,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ).align(Alignment.topLeft),
 
-                  //! SPACER
-                  AppScreenUtils.verticalSpaceMedium,
+          //! SPACER
+          AppScreenUtils.verticalSpaceSmall,
 
-                  //! DRIVER STATUS BOARD
-                  const DriverMainDetails(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //! BACK ICON AND OTHERS
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //! DRIVER STATUS BOARD
+                    const DriverMainDetails(),
 
-                  //! SPACER
-                  AppScreenUtils.verticalSpaceMedium,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceMedium,
 
-                  //! DRIVER OTHER DETAILS BOARD
-                  const DriverOtherDetails(),
-                ]),
+                    //! DRIVER OTHER DETAILS BOARD
+                    const DriverOtherDetails(),
+                  ]),
 
-            //! SPACER
-            const Spacer(),
+              //! SPACER
+              const Spacer(),
 
-            const DriverStatusWidget()
-          ]),
+              const DriverStatusWidget()
+            ],
+          ),
+        ],
+      ).align(Alignment.topLeft).generalPadding,
     );
   }
 }
@@ -80,7 +107,9 @@ class ShowDriverDetails extends StatelessWidget {
 //!
 //! DRIVER STATUS BOARD
 class DriverStatusWidget extends StatelessWidget {
-  const DriverStatusWidget({super.key});
+  const DriverStatusWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,88 +117,102 @@ class DriverStatusWidget extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-        padding: AppScreenUtils.containerPaddingTiny,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: const Color(0xFFE0ECFF)),
+      width: 400.0.w,
+      height: 120.0.h,
+      padding: AppScreenUtils.containerPaddingTiny,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.r),
+          color: const Color(0xFFE0ECFF)),
 
-        //! CHILD
-        child: Column(children: [
+      //! CHILD
+      child: Column(
+        children: [
           //! FIRST ROW - CURRENT STATUS DETAILS
-          Row(children: [
-            Text("${AppTexts.currentStatus}:",
-                style: textTheme.bodyText1!.copyWith(
-                    fontSize: 14.0.sp, color: AppThemeColours.appBlue)),
+          Row(
+            children: [
+              Text("${AppTexts.currentStatus}:",
+                  style: textTheme.bodyText1!.copyWith(
+                      fontSize: 14.0.sp, color: AppThemeColours.appBlue)),
 
-            //! SPACER
-            AppScreenUtils.horizontalSpaceSmall,
+              //! SPACER
+              AppScreenUtils.horizontalSpaceSmall,
 
-            Text(DriverStatus.enroute.name,
-                style: textTheme.bodyText2!.copyWith(
-                    fontSize: 14.0.sp, color: AppThemeColours.appGreen)),
+              Text(DriverStatus.enroute.name,
+                  style: textTheme.bodyText2!.copyWith(
+                      fontSize: 14.0.sp, color: AppThemeColours.appGreen)),
 
-            //! SPACER
-            AppScreenUtils.horizontalSpaceLarge,
+              //! SPACER
+              const Spacer(),
 
-            //! VIEW ON MAP
-            Container(
+              //! VIEW ON MAP
+              Container(
                 padding: AppScreenUtils.containerPaddingTiny,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.r),
                     color: AppThemeColours.appBlueTransparent),
-                child: Row(children: [
-                  Icon(Icons.route_outlined, size: 16.0.sp),
+                child: Row(
+                  children: [
+                    Icon(Icons.route_outlined, size: 16.0.sp),
 
-                  //! SPACER
-                  AppScreenUtils.horizontalSpaceSmall,
+                    //! SPACER
+                    AppScreenUtils.horizontalSpaceSmall,
 
-                  //! VIEW ON MAP
-                  Text(AppTexts.viewOnMap,
+                    //! VIEW ON MAP
+                    Text(
+                      AppTexts.viewOnMap,
                       style: textTheme.bodyText2!.copyWith(
                           height: 1.0.sp,
                           fontSize: 14.0.sp,
-                          color: AppThemeColours.appBlue))
-                ]))
-          ]),
+                          color: AppThemeColours.appBlue),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
 
           //! SPACER
           AppScreenUtils.verticalSpaceSmall,
 
           //! NUMBER OF PASSENGERS AND  MINUTES TILL ARRIVAL
-          Row(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text("24|24 Passengers",
                 style: textTheme.bodyText1!
                     .copyWith(fontSize: 14.0.sp, color: Colors.grey.shade700)),
-
-            //! SPACER
-            AppScreenUtils.horizontalSpaceLarge,
-
             Text("15 Minutes till arrival",
                 style: textTheme.bodyText2!
                     .copyWith(fontSize: 14.0.sp, color: Colors.grey.shade700))
           ]),
 
+          //! SPACER
+          AppScreenUtils.verticalSpaceSmall,
+
           //! BUS ROUTE
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text("Kibikibi Way -------",
-                style: textTheme.bodyText2!
-                    .copyWith(fontSize: 14.0.sp, color: Colors.grey.shade700)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Kibikibi Way -------",
+                  style: textTheme.bodyText2!.copyWith(
+                      fontSize: 14.0.sp, color: Colors.grey.shade700)),
 
-            //! SPACER
-            AppScreenUtils.horizontalSpaceMedium,
+              //! SPACER
+              AppScreenUtils.horizontalSpaceMedium,
 
-            //! BUS ICON
-            Icon(Icons.bus_alert_outlined,
-                size: 16.0.sp, color: AppThemeColours.appGreen),
+              //! BUS ICON
+              Icon(Icons.bus_alert_outlined,
+                  size: 16.0.sp, color: AppThemeColours.appGreen),
 
-            //! SPACER
-            AppScreenUtils.horizontalSpaceMedium,
+              //! SPACER
+              AppScreenUtils.horizontalSpaceMedium,
 
-            Text("------- Jungle Junction",
-                style: textTheme.bodyText1!
-                    .copyWith(fontSize: 14.0.sp, color: Colors.grey.shade700))
-          ])
-        ]));
+              Text("------- Jungle Junction",
+                  style: textTheme.bodyText1!
+                      .copyWith(fontSize: 14.0.sp, color: Colors.grey.shade700))
+            ],
+          ),
+        ],
+      ),
+    ).align(Alignment.topRight);
   }
 }
 
@@ -188,15 +231,16 @@ class DriverMainDetails extends StatelessWidget {
         padding: AppScreenUtils.containerPaddingSmall,
         width: 700.0.w,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: AppThemeColours.appWhiteBGColour),
+          borderRadius: BorderRadius.circular(8.r),
+          color: AppThemeColours.appWhiteBGColour,
+        ),
 
         //! CONTENT
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           //! DRIVER DETAILS ROW - PROFILE PICTURE AND CALL ICONS
           Row(children: [
             //! PROFILE IMAGE
-            const ProfilePhotoWidget(imageURL: AppImages.drivers),
+            const ProfilePhotoWidget(imageURL: AppImages.user1),
 
             //! SPACER
             AppScreenUtils.horizontalSpaceSmall,
@@ -360,18 +404,22 @@ class DriverOtherPrivateDetails extends StatelessWidget {
 
         //! SUSPEND
         Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: 21.0.sp, vertical: 14.0.sp),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.r),
-                color: AppThemeColours.appRedTransparent),
+          padding: EdgeInsets.symmetric(horizontal: 21.0.sp, vertical: 14.0.sp),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.r),
+            color: AppThemeColours.appRedTransparent.withOpacity(0.5),
+          ),
 
-            //! CHILD
-            child: Text("Suspend Driver",
-                style: textTheme.bodyText2!.copyWith(
-                    height: 1.0.sp,
-                    fontSize: 14.0.sp,
-                    color: AppThemeColours.appRed)))
+          //! CHILD
+          child: Text(
+            "Suspend Driver",
+            style: textTheme.bodyText2!.copyWith(
+              height: 1.0.sp,
+              fontSize: 14.0.sp,
+              color: AppThemeColours.appRed,
+            ),
+          ),
+        )
       ]),
     );
   }
@@ -410,13 +458,14 @@ class _DriverOtherDetailsState extends State<DriverOtherDetails>
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-        padding: AppScreenUtils.containerPaddingSmall,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: AppThemeColours.appWhiteBGColour),
+      padding: AppScreenUtils.containerPaddingSmall,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.r),
+          color: AppThemeColours.appWhiteBGColour),
 
-        //! CHILD
-        child: Column(children: [
+      //! CHILD
+      child: Column(
+        children: [
           //! TABS
           SizedBox(
               height: 50.0.h,
@@ -437,27 +486,30 @@ class _DriverOtherDetailsState extends State<DriverOtherDetails>
                           .toList())),
 
           //! SPACER
-          AppScreenUtils.verticalSpaceMedium,
+          AppScreenUtils.verticalSpaceSmall,
 
           //!
           //! TAB BAR VIEW
-
           SizedBox(
-              height: 500.0.h,
-              width: 700.0.w,
-              child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: const [
-                    //! FIRST PAGE -  DRIVER INFORMATION
-                    DriverInformation(),
+            height: 600.0.h,
+            width: 700.0.w,
+            child: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _tabController,
+              children: const [
+                //! FIRST PAGE -  DRIVER INFORMATION
+                DriverInformation(),
 
-                    //! SECOND PAGE - PAYMENT OPTIONS
-                    InFlow(),
+                //! SECOND PAGE - PAYMENT OPTIONS
+                InFlow(),
 
-                    //! LAST PAGE - RIDE SUMMARY
-                    RideHistory()
-                  ]))
-        ]));
+                //! LAST PAGE - RIDE SUMMARY
+                RideHistory()
+              ],
+            ).generalHorizontalPadding,
+          ),
+        ],
+      ),
+    );
   }
 }

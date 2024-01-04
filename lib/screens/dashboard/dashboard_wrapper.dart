@@ -6,11 +6,14 @@ import 'package:urban_transit_admin/screens/dashboard/dashboard.dart';
 import 'package:urban_transit_admin/screens/dashboard/map/dashboard_map.dart';
 import 'package:urban_transit_admin/screens/dashboard/widget/dashboard_drawer.dart';
 import 'package:urban_transit_admin/screens/drivers/drivers_section.dart';
+import 'package:urban_transit_admin/screens/drivers/widget/add_driver.dart';
+import 'package:urban_transit_admin/screens/drivers/widget/show_driver_details.dart';
 import 'package:urban_transit_admin/screens/inflow/inflow.dart';
 import 'package:urban_transit_admin/screens/notifications/notification.dart';
 import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.dart';
 import 'package:urban_transit_admin/services/controllers/dashboard_page_controller.dart';
 import 'package:urban_transit_admin/services/controllers/drawer_controller.dart';
+import 'package:urban_transit_admin/services/controllers/drivers_page_controller.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
@@ -83,6 +86,8 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
   @override
   Widget build(BuildContext context) {
     final currentPage = ref.watch(dashboardPageController);
+    final driversPageVisibleWidget =
+        ref.watch(driversPageVisibleWidgetController);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -114,13 +119,39 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                       Expanded(
                         child: currentPage.when(
                           data: (pageName) {
+                            late Widget driversPageWidgetToBeShown;
+
+                            if (pageName == DashboardDrawerPages.driversPage) {
+                              final pageToBeShown =
+                                  driversPageVisibleWidget.value;
+
+                              switch (pageToBeShown) {
+                                case DriversPageVisibleWidgetState.addNewDriver:
+                                  driversPageWidgetToBeShown =
+                                      const AddDriver();
+                                  break;
+                                case DriversPageVisibleWidgetState
+                                      .driverDetails:
+                                  driversPageWidgetToBeShown =
+                                      const ShowDriverDetails();
+                                  break;
+                                case DriversPageVisibleWidgetState
+                                      .driversAndInbox:
+                                  driversPageWidgetToBeShown =
+                                      const DriversSection();
+                                  break;
+                                default:
+                                  const DriversSection();
+                              }
+                            }
+
                             return switch (pageName) {
                               DashboardDrawerPages.adminPage =>
                                 const AdminInformation(),
                               DashboardDrawerPages.dashboardPage =>
                                 const DashboardScreen(),
                               DashboardDrawerPages.driversPage =>
-                                const DriversSection(),
+                                driversPageWidgetToBeShown,
                               DashboardDrawerPages.notificationsPage =>
                                 const NotificationsScreen(),
                               DashboardDrawerPages.inflowPage => const Inflow(),

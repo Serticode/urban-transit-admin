@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:urban_transit_admin/screens/widgets/call_dialogue.dart';
+import 'package:urban_transit_admin/services/controllers/drivers_page_controller.dart';
 import 'package:urban_transit_admin/services/controllers/drivers_page_widget_controller.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
@@ -10,8 +11,6 @@ import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/shared/utils/profile_image.dart';
 import 'package:urban_transit_admin/screens/dashboard/messaging/inbox_view.dart';
-import 'package:urban_transit_admin/screens/drivers/widget/add_driver.dart';
-import 'package:urban_transit_admin/screens/drivers/widget/show_driver_details.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
 class DriversSection extends ConsumerWidget {
@@ -25,7 +24,7 @@ class DriversSection extends ConsumerWidget {
         ref.watch(driversPageInboxWidgetController);
 
     return Padding(
-      padding: AppScreenUtils.containerPadding,
+      padding: AppScreenUtils.containerPaddingSmall,
       child: Stack(children: [
         //! MESSAGES
         driversPageInboxWidgetState.when(
@@ -79,7 +78,7 @@ class DriversSection extends ConsumerWidget {
             delay: 2.7,
             child: Align(
               alignment: Alignment.topLeft,
-              child: ListOfDriversAnDetails(
+              child: ListOfDriversAndDetails(
                 height: widgetState == DriversPageDriversWidgetState.isMaximized
                     ? MediaQuery.of(context).size.height
                     : widgetState == DriversPageDriversWidgetState.isClosed
@@ -117,12 +116,12 @@ class DriversSection extends ConsumerWidget {
   }
 }
 
-class ListOfDriversAnDetails extends StatelessWidget {
+class ListOfDriversAndDetails extends ConsumerWidget {
   final double? height;
   final void Function() minimize;
   final void Function() maximize;
   final void Function() close;
-  const ListOfDriversAnDetails(
+  const ListOfDriversAndDetails(
       {super.key,
       this.height,
       required this.minimize,
@@ -148,7 +147,7 @@ class ListOfDriversAnDetails extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return AnimatedContainer(
@@ -272,36 +271,45 @@ class ListOfDriversAnDetails extends StatelessWidget {
               Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 //! ADD BUTTON
                 InkWell(
-                    //! ADD DRIVER
-                    onTap: () => AppScreenUtils.showAppDialogBox(
-                        theBuildContext: context,
-                        width: 832.0.w,
-                        height: 910.h,
-                        child: const AddDriver()),
+                  //! ADD DRIVER
+                  onTap: () => ref
+                      .read(driversPageVisibleWidgetController.notifier)
+                      .setVisibleWidget(
+                        visibleWidget:
+                            DriversPageVisibleWidgetState.addNewDriver,
+                      ),
+                  /* AppScreenUtils.showAppDialogBox(
+                      theBuildContext: context,
+                      width: 832.0.w,
+                      height: 910.h,
+                      child: const AddDriver()), */
 
-                    //! OTHERS
-                    child: Container(
-                        padding: EdgeInsets.all(8.0.sp),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0.r),
-                            border: Border.all(
-                                width: 0.8.sp,
-                                color: AppThemeColours.appGreen)),
-                        child: Row(children: [
-                          //! ICON
-                          Icon(Icons.add,
-                              size: 14.0.sp, color: AppThemeColours.appGreen),
+                  //! OTHERS
+                  child: Container(
+                    padding: EdgeInsets.all(8.0.sp),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0.r),
+                        border: Border.all(
+                            width: 0.8.sp, color: AppThemeColours.appGreen)),
+                    child: Row(
+                      children: [
+                        //! ICON
+                        Icon(Icons.add,
+                            size: 14.0.sp, color: AppThemeColours.appGreen),
 
-                          //! SPACER
-                          AppScreenUtils.horizontalSpaceSmall,
+                        //! SPACER
+                        AppScreenUtils.horizontalSpaceSmall,
 
-                          //! TEXT
-                          Text("Add New Driver",
-                              style: textTheme.bodyMedium!.copyWith(
-                                  fontSize: 12.0.sp,
-                                  height: 1.0.sp,
-                                  color: AppThemeColours.appGreen))
-                        ]))),
+                        //! TEXT
+                        Text("Add New Driver",
+                            style: textTheme.bodyMedium!.copyWith(
+                                fontSize: 12.0.sp,
+                                height: 1.0.sp,
+                                color: AppThemeColours.appGreen))
+                      ],
+                    ),
+                  ),
+                ),
 
                 //! SPACER
                 const Spacer(),
@@ -324,12 +332,12 @@ class ListOfDriversAnDetails extends StatelessWidget {
                     children: List.generate(
                       16,
                       (index) => InkWell(
-                        onTap: () => AppScreenUtils.showAppDialogBox(
-                          theBuildContext: context,
-                          width: 950.0.w,
-                          height: 910.h,
-                          child: const ShowDriverDetails(),
-                        ),
+                        onTap: () => ref
+                            .read(driversPageVisibleWidgetController.notifier)
+                            .setVisibleWidget(
+                              visibleWidget:
+                                  DriversPageVisibleWidgetState.driverDetails,
+                            ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                           child: DriverItemWidget(

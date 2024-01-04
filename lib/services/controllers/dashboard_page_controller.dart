@@ -17,7 +17,7 @@ final dashboardPageController =
 class DashboardPageController extends AsyncNotifier<DashboardDrawerPages> {
   //!
   @override
-  FutureOr<DashboardDrawerPages> build() => DashboardDrawerPages.driversPage;
+  FutureOr<DashboardDrawerPages> build() => DashboardDrawerPages.dashboardPage;
 
   void setCurrentPage({required DashboardDrawerPages currentPage}) =>
       state = AsyncValue.data(currentPage);

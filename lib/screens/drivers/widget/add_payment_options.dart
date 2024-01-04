@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/screens/widgets/app_elevated_button.dart';
 import 'package:urban_transit_admin/screens/widgets/app_text_form_field.dart';
-import 'package:urban_transit_admin/theme/theme.dart';
 
 class AddPaymentOptions extends StatelessWidget {
   AddPaymentOptions({super.key});
@@ -111,13 +111,15 @@ class AddPaymentOptions extends StatelessWidget {
           //! SPACER
           AppScreenUtils.verticalSpaceMedium,
 
-          //! UPLOAD BUTTON
-          AppElevatedButton(
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemeColours.appBlue),
-                  child: const Text(AppTexts.next)))
+          //! NEXT BUTTON
+          //!TODO: FIX BELOW
+          SizedBox(
+            width: 497.0.w,
+            child: AppElevatedButton(
+              buttonTitle: AppTexts.next,
+              onPressed: () {},
+            ),
+          ).alignCenter(),
         ]));
   }
 }

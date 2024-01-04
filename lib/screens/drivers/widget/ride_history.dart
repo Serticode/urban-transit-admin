@@ -27,10 +27,11 @@ class RideHistory extends StatelessWidget {
       Row(children: [
         //! NUMBER OF PASSENGERS
         Container(
-            padding: EdgeInsets.all(12.0.sp),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 18),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0.r),
-                color: AppThemeColours.appGreenTransparent),
+              borderRadius: BorderRadius.circular(20.0.r),
+              color: AppThemeColours.appGreenTransparent.withOpacity(0.5),
+            ),
             child: Text("30",
                 style: textTheme.displayLarge!.copyWith(
                     color: AppThemeColours.appGreen, fontSize: 14.0.sp))),
@@ -97,15 +98,20 @@ class DriverTripsWidget extends StatelessWidget {
 
         //! PAYMENT TYPE AND TIME
         Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text("12:39pm",
-              style: textTheme.bodyLarge!
-                  .copyWith(height: 1.0.sp, fontSize: 10.0.sp)),
+          Text(
+            "12:39pm",
+            style: textTheme.bodyMedium!.copyWith(
+              height: 1.0.sp,
+              color: AppThemeColours.bodyText2TextColour,
+              fontSize: 10.0.sp,
+            ),
+          ),
 
           //! SPACER
           AppScreenUtils.horizontalSpaceSmall,
 
           Text(paymentType.name,
-              style: textTheme.bodyLarge!.copyWith(
+              style: textTheme.bodyMedium!.copyWith(
                   height: 1.0.sp,
                   color: AppThemeColours.appGreen,
                   fontSize: 10.0.sp))

@@ -184,7 +184,7 @@ abstract class AppScreenUtils {
                   ))),
 
           //! ANIMATION DURATION
-          transitionDuration: const Duration(milliseconds: 200),
+          transitionDuration: const Duration(milliseconds: 300),
 
           //! STILL DON'T KNOW WHAT THIS DOES, BUT IT'S REQUIRED
           pageBuilder: (context, animation1, animation2) => const Text(""));

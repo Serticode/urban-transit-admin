@@ -16,7 +16,7 @@ class DriversPageDriversWidgetController
   //!
   @override
   FutureOr<DriversPageDriversWidgetState> build() =>
-      DriversPageDriversWidgetState.isClosed;
+      DriversPageDriversWidgetState.normal;
 
   void updateWidgetState({required DriversPageDriversWidgetState newState}) =>
       state = AsyncValue.data(newState);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/screens/dashboard/admin/widget/admin_info_section.dart';
 import 'package:urban_transit_admin/screens/dashboard/admin/widget/busses_section.dart';
@@ -16,17 +15,13 @@ class AdminInformation extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //! LEFT SIDE
-          Expanded(child: const AdminInformationSection().fadeInFromBottom()),
+          const Expanded(child: AdminInformationSection()),
 
           //! SPACER
           AppScreenUtils.horizontalSpaceMedium,
 
           //! RIGHT SIDE
-          Expanded(
-            child: const BussesSection().fadeInFromBottom(
-              delay: const Duration(milliseconds: 400),
-            ),
-          )
+          const Expanded(child: BussesSection())
         ],
       ),
     );

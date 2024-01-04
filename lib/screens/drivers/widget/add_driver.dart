@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:urban_transit_admin/services/controllers/dashboard_page_controller.dart';
+import 'package:urban_transit_admin/services/controllers/drivers_page_controller.dart';
+import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
+import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/screens/widgets/app_elevated_button.dart';
@@ -8,14 +13,15 @@ import 'package:urban_transit_admin/screens/drivers/widget/add_payment_options.d
 import 'package:urban_transit_admin/screens/drivers/widget/assign_bus.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
-class AddDriver extends StatefulWidget {
+class AddDriver extends ConsumerStatefulWidget {
   const AddDriver({super.key});
 
   @override
-  State<AddDriver> createState() => _AddDriverState();
+  ConsumerState<AddDriver> createState() => _AddDriverState();
 }
 
-class _AddDriverState extends State<AddDriver> with TickerProviderStateMixin {
+class _AddDriverState extends ConsumerState<AddDriver>
+    with TickerProviderStateMixin {
   //! ADD DRIVER OPTIONS
   late TabController _tabController;
 
@@ -38,64 +44,102 @@ class _AddDriverState extends State<AddDriver> with TickerProviderStateMixin {
     //! TEXT STYLE
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Column(children: [
-      //! REMOVE SCREEN
-      Row(children: [
-        //! BACK
-        IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.arrow_back_ios,
-                size: 21.0.sp, color: AppThemeColours.appBlue)),
+    return AppFadeAnimation(
+      delay: 2.4,
+      child: Container(
+        padding: AppScreenUtils.containerPadding,
+        width: 832.0.w,
+        height: 790.0.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppThemeColours.appWhiteBGColour,
+        ),
+        child: Column(
+          children: [
+            //! REMOVE SCREEN
+            Row(children: [
+              //! BACK
+              Container(
+                width: 35,
+                height: 35,
+                decoration: ShapeDecoration(
+                  color: AppThemeColours.appWhiteBGColour,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 1, color: Color(0xFFA8C8FF)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Icon(Icons.arrow_back,
+                    size: 18.0.sp, color: AppThemeColours.appBlue),
+              ).onTap(
+                onTap: () => ref.read(dashboardPageController).value ==
+                        DashboardDrawerPages.adminPage
+                    ? Navigator.of(context).pop()
+                    : ref
+                        .read(driversPageVisibleWidgetController.notifier)
+                        .setVisibleWidget(
+                          visibleWidget:
+                              DriversPageVisibleWidgetState.driversAndInbox,
+                        ),
+              ),
 
-        //! SPACER
-        AppScreenUtils.horizontalSpaceMedium,
+              //! SPACER
+              AppScreenUtils.horizontalSpaceSmall,
 
-        Text(AppTexts.addDriver,
-            style: textTheme.bodyLarge!.copyWith(height: 1.2.sp))
-      ]),
+              Text(
+                AppTexts.addDriver,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontSize: 18.0.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+              )
+            ]),
 
-      //! SPACER
-      AppScreenUtils.verticalSpaceMedium,
+            //! SPACER
+            AppScreenUtils.verticalSpaceSmall,
 
-      //! TABS
-      SizedBox(
-          height: 50.0.h,
-          width: double.infinity.w,
-          child: //! TAB NOTIFIER
-              TabBar(
+            //! TABS
+            SizedBox(
+                height: 50.0.h,
+                width: double.infinity.w,
+                child: //! TAB NOTIFIER
+                    TabBar(
+                        controller: _tabController,
+                        indicatorColor: AppThemeColours.primaryColour,
+                        indicatorWeight: 1.5.h,
+                        physics: const BouncingScrollPhysics(),
+                        onTap: (value) {},
+                        tabs: _addDriverOptions
+                            .map((themeOption) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(themeOption,
+                                    style: textTheme.bodyLarge!
+                                        .copyWith(fontSize: 12.0.sp))))
+                            .toList())),
+
+            //! SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
+            //! TAB BAR VIEW
+            Expanded(
+              child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _tabController,
-                  indicatorColor: AppThemeColours.primaryColour,
-                  indicatorWeight: 1.5.h,
-                  physics: const BouncingScrollPhysics(),
-                  onTap: (value) {},
-                  tabs: _addDriverOptions
-                      .map((themeOption) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(themeOption,
-                              style: textTheme.bodyLarge!
-                                  .copyWith(fontSize: 12.0.sp))))
-                      .toList())),
+                  children: [
+                    //! FIRST PAGE -  DRIVER INFORMATION
+                    AddDriverWidget(),
 
-      //! SPACER
-      AppScreenUtils.verticalSpaceMedium,
+                    //! SECOND PAGE - PAYMENT OPTIONS
+                    AddPaymentOptions(),
 
-      //! TAB BAR VIEW
-      SizedBox(
-          height: 913.0.h,
-          child: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _tabController,
-              children: [
-                //! FIRST PAGE -  DRIVER INFORMATION
-                AddDriverWidget(),
-
-                //! SECOND PAGE - PAYMENT OPTIONS
-                AddPaymentOptions(),
-
-                //! LAST PAGE - ASSIGN BUS
-                AssignBus()
-              ]))
-    ]);
+                    //! LAST PAGE - ASSIGN BUS
+                    AssignBus()
+                  ]),
+            ),
+          ],
+        ),
+      ).align(Alignment.topLeft).generalPadding,
+    );
   }
 }
 
@@ -118,8 +162,10 @@ class AddDriverWidget extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           //! FULL NAME
           Text(AppTexts.fullName,
               style: textTheme.bodyLarge!.copyWith(fontSize: 14.0.sp)),
@@ -283,15 +329,19 @@ class AddDriverWidget extends StatelessWidget {
                       ]))),
 
           //! SPACER
-          AppScreenUtils.verticalSpaceSmall,
+          AppScreenUtils.verticalSpaceMedium,
 
-          //! UPLOAD BUTTON
-          AppElevatedButton(
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemeColours.appBlue),
-                  child: const Text(AppTexts.next)))
-        ]));
+          //! NEXT BUTTON
+          //!TODO: FIX BELOW
+          SizedBox(
+            width: 497.0.w,
+            child: AppElevatedButton(
+              buttonTitle: AppTexts.next,
+              onPressed: () {},
+            ),
+          ).alignCenter(),
+        ],
+      ),
+    );
   }
 }

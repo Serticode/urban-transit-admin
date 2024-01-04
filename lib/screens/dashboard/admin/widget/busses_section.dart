@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:urban_transit_admin/shared/utils/app_divider.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
-import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/screens/widgets/app_text_form_field.dart';
@@ -40,23 +39,26 @@ class _BussesSectionState extends ConsumerState<BussesSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //! TITLE
-          AppFadeAnimation(
-              delay: 1.2,
-              child: Text(
-                AppTexts.buses,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: 21.0.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-              )),
+          Text(
+            AppTexts.buses,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontSize: 21.0.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
 
           //! SPACER
           21.0.sizedBoxHeight,
 
           //! CONTENT - NUMBER OF ACTIVE DRIVERS
           //! TITLE
-          Text("10 ${AppTexts.buses}",
-              style: textTheme.displayLarge!.copyWith(fontSize: 16.0.sp)),
+          Text(
+            "10 ${AppTexts.buses}",
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
 
           //! SPACER
           AppScreenUtils.verticalSpaceSmall,
@@ -159,7 +161,7 @@ class _BussesSectionState extends ConsumerState<BussesSection> {
 
           Expanded(
             child: ListView.separated(
-              itemCount: 10,
+              itemCount: 4,
               physics: const BouncingScrollPhysics(),
               separatorBuilder: (context, index) => const AppDivider(),
               itemBuilder: (context, index) => ListOfBusesWidget(index: index),
