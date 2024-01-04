@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
@@ -64,113 +66,122 @@ class _OTPVerificationState extends State<OTPVerification> {
             color: AppThemeColours.appBlueTransparent.withOpacity(0.3)));
 
     //! MAIN WIDGET
-    return Scaffold(
-      body: Container(
-        width: 720.0,
-        height: 650.0,
-        padding: AppScreenUtils.containerPadding,
-        decoration:
-            BoxDecoration(color: AppThemeColours.appWhiteBGColour, boxShadow: [
-          BoxShadow(
-              color: AppThemeColours.appGreyBGColour.withOpacity(0.8),
-              blurRadius: 32.0.sp)
-        ]),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //! TITLE
-            AppFadeAnimation(
-                delay: 1.2,
-                child: Text(AppTexts.otpVerification,
-                    style: textTheme.displayLarge)),
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) =>
+          (sizingInformation.screenSize.width >= 1440 &&
+                  sizingInformation.screenSize.height >= 768)
+              ? Scaffold(
+                  body: Container(
+                    width: 720.0,
+                    height: 650.0,
+                    padding: AppScreenUtils.containerPadding,
+                    decoration: BoxDecoration(
+                        color: AppThemeColours.appWhiteBGColour,
+                        boxShadow: [
+                          BoxShadow(
+                              color: AppThemeColours.appGreyBGColour
+                                  .withOpacity(0.8),
+                              blurRadius: 32.0.sp)
+                        ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //! TITLE
+                        AppFadeAnimation(
+                            delay: 1.2,
+                            child: Text(AppTexts.otpVerification,
+                                style: textTheme.displayLarge)),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceSmall,
+                        //! SPACER
+                        AppScreenUtils.verticalSpaceSmall,
 
-            //! NOTICE
-            AppFadeAnimation(
-              delay: 1.4,
-              //! TODO: CHANGE THE MAIL BELOW
-              child: Text(
-                  AppTexts.otpVerificationNotice(
-                      userEmail: "nile***@staff.edu.ng"),
-                  style: textTheme.displayMedium),
-            ),
+                        //! NOTICE
+                        AppFadeAnimation(
+                          delay: 1.4,
+                          //! TODO: CHANGE THE MAIL BELOW
+                          child: Text(
+                              AppTexts.otpVerificationNotice(
+                                  userEmail: "nile***@staff.edu.ng"),
+                              style: textTheme.displayMedium),
+                        ),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceMedium,
+                        //! SPACER
+                        AppScreenUtils.verticalSpaceMedium,
 
-            //! PINPUT SECTION
-            Center(
-              child: AppFadeAnimation(
-                delay: 2.2,
-                child: Pinput(
-                  length: 5,
-                  defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: focusedPinTheme,
-                  submittedPinTheme: submittedPinTheme,
+                        //! PINPUT SECTION
+                        Center(
+                          child: AppFadeAnimation(
+                            delay: 2.2,
+                            child: Pinput(
+                              length: 5,
+                              defaultPinTheme: defaultPinTheme,
+                              focusedPinTheme: focusedPinTheme,
+                              submittedPinTheme: submittedPinTheme,
 
-                  //! IF THERE IS AN ERROR MESSAGE
-                  errorTextStyle: textTheme.bodyMedium!.copyWith(
-                      color: AppThemeColours.appRed,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0.sp),
+                              //! IF THERE IS AN ERROR MESSAGE
+                              errorTextStyle: textTheme.bodyMedium!.copyWith(
+                                  color: AppThemeColours.appRed,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.0.sp),
 
-                  //! VALIDATOR
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter the sent pin";
-                    } else if (value == 12345.toString()) {
-                      setState(() => _isPinValid = true);
-                      return null;
-                    } else {
-                      return "Entered pin is incorrect";
-                    }
-                  },
+                              //! VALIDATOR
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Enter the sent pin";
+                                } else if (value == 12345.toString()) {
+                                  setState(() => _isPinValid = true);
+                                  return null;
+                                } else {
+                                  return "Entered pin is incorrect";
+                                }
+                              },
 
-                  //! OTHERS
-                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                  showCursor: true,
-                  onCompleted: (pin) => log(pin),
-                ),
-              ),
-            ),
+                              //! OTHERS
+                              pinputAutovalidateMode:
+                                  PinputAutovalidateMode.onSubmit,
+                              showCursor: true,
+                              onCompleted: (pin) => log(pin),
+                            ),
+                          ),
+                        ),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceLarge,
+                        //! SPACER
+                        AppScreenUtils.verticalSpaceLarge,
 
-            //! BUTTON
-            AppFadeAnimation(
-              delay: 2.0,
-              child: AppElevatedButton(
-                //! ON PRESSED
-                onPressed: () {
-                  _isPinValid
-                      ? AppNavigator.navigateToPage(
-                          thePageRouteName: AppRoutes.newAuthSetup,
-                          context: context)
-                      : {};
-                },
-                buttonTitle: AppTexts.verifyOTP,
-              ),
-            ),
+                        //! BUTTON
+                        AppFadeAnimation(
+                          delay: 2.0,
+                          child: AppElevatedButton(
+                            //! ON PRESSED
+                            onPressed: () {
+                              _isPinValid
+                                  ? AppNavigator.navigateToPage(
+                                      thePageRouteName: AppRoutes.newAuthSetup,
+                                      context: context)
+                                  : {};
+                            },
+                            buttonTitle: AppTexts.verifyOTP,
+                          ),
+                        ),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceLarge,
+                        //! SPACER
+                        AppScreenUtils.verticalSpaceLarge,
 
-            //! RESEND OTP
-            Center(
-                child: TextButton(
-                    onPressed: () {},
-                    child: Text(AppTexts.resendOTP,
-                        style: textTheme.bodyMedium!
-                            .copyWith(color: AppThemeColours.appBlue)))),
+                        //! RESEND OTP
+                        Center(
+                            child: TextButton(
+                                onPressed: () {},
+                                child: Text(AppTexts.resendOTP,
+                                    style: textTheme.bodyMedium!.copyWith(
+                                        color: AppThemeColours.appBlue)))),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceMedium
-          ],
-        ).generalPadding,
-      ).generalPadding.generalPadding.alignCenter(),
+                        //! SPACER
+                        AppScreenUtils.verticalSpaceMedium
+                      ],
+                    ).generalPadding,
+                  ).generalPadding.generalPadding.alignCenter(),
+                )
+              : const ResizeToDesktopScreen(),
     );
   }
 }

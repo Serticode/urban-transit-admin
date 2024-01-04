@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
@@ -42,81 +44,87 @@ class _SignInScreenState extends State<SignInScreen> {
     //! TEXT STYLE
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      body: Container(
-        width: 640.0.w,
-        height: 592.0.h,
-        padding: AppScreenUtils.containerPadding,
-        decoration:
-            BoxDecoration(color: AppThemeColours.appWhiteBGColour, boxShadow: [
-          BoxShadow(
-            color: AppThemeColours.appGreyBGColour.withOpacity(0.8),
-            blurRadius: 32.0.sp,
-          )
-        ]),
+    return ResponsiveBuilder(builder: (context, sizingInformation) {
+      return (sizingInformation.screenSize.width >= 1440 &&
+              sizingInformation.screenSize.height >= 768)
+          ? Scaffold(
+              body: Container(
+                width: 640.0.w,
+                height: 592.0.h,
+                padding: AppScreenUtils.containerPadding,
+                decoration: BoxDecoration(
+                    color: AppThemeColours.appWhiteBGColour,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppThemeColours.appGreyBGColour.withOpacity(0.8),
+                        blurRadius: 32.0.sp,
+                      )
+                    ]),
 
-        //! MAIN BODY
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //! TITLE
-            AppFadeAnimation(
-                delay: 1.2,
-                child:
-                    Text(AppTexts.welcomeBack, style: textTheme.displayLarge)),
+                //! MAIN BODY
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //! TITLE
+                    AppFadeAnimation(
+                        delay: 1.2,
+                        child: Text(AppTexts.welcomeBack,
+                            style: textTheme.displayLarge)),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceMedium,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceMedium,
 
-            //! CHOOSE A USER NAME
-            //! LABEL
-            Text(AppTexts.chooseAUserName, style: textTheme.bodyLarge),
+                    //! CHOOSE A USER NAME
+                    //! LABEL
+                    Text(AppTexts.chooseAUserName, style: textTheme.bodyLarge),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceSmall,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceSmall,
 
-            //! USER NAME
-            AppTextFormField(
-                hintText: AppTexts.yourUsername,
-                controller: _userNameController,
-                onChanged: (textContent) {}),
+                    //! USER NAME
+                    AppTextFormField(
+                        hintText: AppTexts.yourUsername,
+                        controller: _userNameController,
+                        onChanged: (textContent) {}),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceMedium,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceMedium,
 
-            //! NEW PASSWORD
-            //! LABEL
-            Text(AppTexts.newPassword, style: textTheme.bodyLarge),
+                    //! NEW PASSWORD
+                    //! LABEL
+                    Text(AppTexts.newPassword, style: textTheme.bodyLarge),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceSmall,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceSmall,
 
-            //! PASSWORD
-            AppTextFormField(
-                hintText: AppTexts.yourPassword,
-                controller: _passwordController,
-                onChanged: (textContent) {}),
+                    //! PASSWORD
+                    AppTextFormField(
+                        hintText: AppTexts.yourPassword,
+                        controller: _passwordController,
+                        onChanged: (textContent) {}),
 
-            //! SPACER
-            AppScreenUtils.verticalSpaceMedium,
+                    //! SPACER
+                    AppScreenUtils.verticalSpaceMedium,
 
-            //! BUTTON
-            AppFadeAnimation(
-              delay: 1.6,
-              child: AppElevatedButton(
-                onPressed: () {
-                  AppNavigator.navigateToAndRemoveAllPreviousScreens(
-                    thePageRouteName: AppRoutes.dashboardWrapper,
-                    context: context,
-                  );
-                },
-                buttonTitle: AppTexts.login,
-              ),
-            ),
-          ],
-        ).generalPadding,
-      ).alignCenter(),
-    );
+                    //! BUTTON
+                    AppFadeAnimation(
+                      delay: 1.6,
+                      child: AppElevatedButton(
+                        onPressed: () {
+                          AppNavigator.navigateToAndRemoveAllPreviousScreens(
+                            thePageRouteName: AppRoutes.dashboardWrapper,
+                            context: context,
+                          );
+                        },
+                        buttonTitle: AppTexts.login,
+                      ),
+                    ),
+                  ],
+                ).generalPadding,
+              ).alignCenter(),
+            )
+          : const ResizeToDesktopScreen();
+    });
   }
 }

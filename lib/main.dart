@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:urban_transit_admin/router/router.dart';
-import 'package:urban_transit_admin/screens/dashboard/dashboard_wrapper.dart';
 import 'package:urban_transit_admin/screens/landing_page/landing_page.dart';
 import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
@@ -48,11 +47,10 @@ class _UrbanTransitAdminState extends ConsumerState<UrbanTransitAdmin> {
             onGenerateRoute: (settings) => AppNavigator.generateRoute(
               routeSettings: settings,
             ),
-            home: // sizingInformation.screenSize.height.toString().log();
-                (sizingInformation.screenSize.width >= 1440 &&
-                        sizingInformation.screenSize.height >= 768)
-                    ? const DashboardWrapper() //LandingPage()
-                    : const ResizeToDesktopScreen(),
+            home: (sizingInformation.screenSize.width >= 1440 &&
+                    sizingInformation.screenSize.height >= 768)
+                ? const LandingPage()
+                : const ResizeToDesktopScreen(),
           ),
         ),
       );
