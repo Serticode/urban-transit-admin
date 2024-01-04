@@ -6,6 +6,7 @@
     "latlng",
     "pinput",
     "screenutil",
-    "scrollbars"
+    "scrollbars",
+    "urbantransit"
   ]
 }

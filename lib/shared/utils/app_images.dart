@@ -8,7 +8,8 @@ abstract class AppImages {
       "lib/assets/images/notifications_logo.jpg";
   static const String inflow = "lib/assets/images/inflow_logo.jpg";
   static const String urbanTransit = "lib/assets/images/urbantransit_logo.jpg";
-  static const String user1 = "lib/assets/icons/user1.png";
-  static const String user2 = "lib/assets/icons/user2.png";
-  static const String user3 = "lib/assets/icons/user3.png";
+  static const String user1 = "lib/assets/images/user1.png";
+  static const String user2 = "lib/assets/images/user2.png";
+  static const String user3 = "lib/assets/images/user3.png";
+  static const String resizeToDesktop = "lib/assets/images/resizeToDesktop.png";
 }
