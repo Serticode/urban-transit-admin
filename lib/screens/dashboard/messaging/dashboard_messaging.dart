@@ -52,254 +52,273 @@ class _DashboardMessagingState extends ConsumerState<DashboardMessaging> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final isVoiceRecording = ref.watch(voiceMessageController);
     final theRecordedMessageURL = ref.watch(recordedVoiceMessageController);
+    final isPlaying = ref.watch(voiceMessagePlayerController);
 
-    return Column(children: [
-      //! HEADER
-      MessagingHeader(
-        imageURL: "",
-        fullName: "Micheal GotDamn",
-        contact: "#64538252423",
-        isOnline: true,
-        isVerified: true,
-        //!TODO: FIX BELOW
-        callUser: () => AppScreenUtils.showAppCallDialogue(
-          theBuildContext: context,
-          width: 350.0.w,
-          height: 500.0.h,
-          child: CallDialogue(
-            minimize: () {},
-            maximize: () {},
-            close: () => Navigator.of(context).pop(),
+    return Column(
+      children: [
+        //! HEADER
+        MessagingHeader(
+          imageURL: "",
+          fullName: "Micheal GotDamn",
+          contact: "#64538252423",
+          isOnline: true,
+          isVerified: true,
+          //!TODO: FIX BELOW
+          callUser: () => AppScreenUtils.showAppCallDialogue(
+            theBuildContext: context,
+            width: 350.0.w,
+            height: 500.0.h,
+            child: CallDialogue(
+              minimize: () {},
+              maximize: () {},
+              close: () => Navigator.of(context).pop(),
+            ),
           ),
+          onTap: widget.onTap,
         ),
-        onTap: widget.onTap,
-      ),
-
-      //! SPACER
-      AppScreenUtils.verticalSpaceSmall,
-
-      //! DIVIDER
-      SizedBox(
-          height: 1.0.h,
-          child: Divider(
-              height: 1.0.h,
-              thickness: 0.8.sp,
-              color: AppThemeColours.appGreyBGColour)),
-
-      //! SPACER
-      AppScreenUtils.verticalSpaceSmall,
-
-      //! DATE AND TIME
-      Text("Wednesday 23rd May,2022",
-          style: textTheme.bodyLarge!.copyWith(fontSize: 12.0.sp)),
-
-      //! SPACER
-      AppScreenUtils.verticalSpaceSmall,
-
-      //! MAIN MESSAGES
-      const Expanded(child: MessageList()),
-
-      //! DIVIDER
-      SizedBox(
-          height: 1.0.h,
-          child: Divider(
-              height: 1.0.h,
-              thickness: 0.8.sp,
-              color: AppThemeColours.appGreyBGColour)),
-
-      //! SPACER
-      AppScreenUtils.verticalSpaceSmall,
-
-      //! BASE - TEXT FORM FIELD AND MIC ICON
-      Row(children: [
-        Expanded(
-            child: MessagingTextFormField(
-                controller: _messageEditingController,
-                suffixIcon: Icons.send_outlined,
-                hintText: AppTexts.writeAMessage,
-                suffixIconColour: AppThemeColours.appBlue)),
 
         //! SPACER
-        AppScreenUtils.horizontalSpaceSmall,
+        AppScreenUtils.verticalSpaceSmall,
 
-        //! MIC
-        isVoiceRecording.when(
-          data: (recorderState) {
-            return recorderState == VoiceRecorderStates.notRecording
-                ? CircleAvatar(
-                    radius: 16.0.r,
-                    backgroundColor: AppThemeColours.appBlue,
-                    child: Icon(Icons.mic_outlined,
-                        size: 16.0.sp, color: AppThemeColours.appWhiteBGColour),
-                  ).onTap(
-                    onTap: () async {
-                      ref.read(voiceMessageController.notifier).isRecording(
-                          isRecording: VoiceRecorderStates.recording);
+        //! DIVIDER
+        SizedBox(
+            height: 1.0.h,
+            child: Divider(
+                height: 1.0.h,
+                thickness: 0.8.sp,
+                color: AppThemeColours.appGreyBGColour)),
 
-                      await recorder.start();
-                    },
-                  )
-                : recorderState == VoiceRecorderStates.recorded
-                    ? theRecordedMessageURL.when(
-                        data: (recordedFilePath) {
-                          return Row(
-                            children: [
-                              Icon(
-                                Icons.play_arrow_outlined,
-                                /* playingState == PlayerState.stopped
-                                          ? Icons.play_arrow_outlined
-                                          : Icons.pause_outlined, */
-                                color: AppThemeColours.appBlue,
-                                size: 18,
-                              ).onTap(
-                                onTap: () async {
-                                  player.state.log();
-                                  if (recordedFilePath.isEmpty) {
-                                    await player
-                                        .play(UrlSource(recordedFilePath));
-                                  }
+        //! SPACER
+        AppScreenUtils.verticalSpaceSmall,
 
-                                  /* if (playingState ==
-                                            PlayerState.stopped) {
-                                        } else if (playingState ==
-                                            PlayerState.playing) {
-                                          await player.stop();
-                                          ref
-                                              .read(voiceMessagePlayerController
-                                                  .notifier)
-                                              .updateThePlayingState(
-                                                  playingState:
-                                                      PlayerState.stopped);
-                                        } */
-                                },
-                              ),
-                              /* Builder(builder: (context) {
-                                final isPlaying =
-                                    ref.watch(voiceMessagePlayerController);
+        //! DATE AND TIME
+        Text("Wednesday 23rd May,2022",
+            style: textTheme.bodyLarge!.copyWith(fontSize: 12.0.sp)),
 
-                                return isPlaying.when(
-                                  data: (playingState) {
-                                    return Icon(
-                                      playingState == PlayerState.stopped
-                                          ? Icons.play_arrow_outlined
-                                          : Icons.pause_outlined,
-                                      color: AppThemeColours.appBlue,
-                                      size: 18,
-                                    ).onTap(
-                                      onTap: () async {
-                                        player.state.log();
-                                        if (recordedFilePath.isEmpty) {
-                                          await player.play(
-                                              UrlSource(recordedFilePath));
-                                        }
+        //! SPACER
+        AppScreenUtils.verticalSpaceSmall,
 
-                                        /* if (playingState ==
-                                            PlayerState.stopped) {
-                                        } else if (playingState ==
-                                            PlayerState.playing) {
-                                          await player.stop();
-                                          ref
-                                              .read(voiceMessagePlayerController
-                                                  .notifier)
-                                              .updateThePlayingState(
-                                                  playingState:
-                                                      PlayerState.stopped);
-                                        } */
-                                      },
-                                    );
-                                  },
-                                  error: (error, stackTrace) =>
-                                      "$error $stackTrace".txt(),
-                                  loading: () =>
-                                      const CircularProgressIndicator(),
-                                );
-                              }), */
-                              12.0.sizedBoxWidth,
-                              const Icon(
-                                Icons.delete_outline,
-                                color: AppThemeColours.appRed,
-                                size: 18,
-                              ).onTap(
-                                onTap: () async {
-                                  ref
-                                      .read(recordedVoiceMessageController
-                                          .notifier)
-                                      .isVoiceMessageRecorded(
-                                          recordedMessageURL: "");
+        //! MAIN MESSAGES
+        const Expanded(child: MessageList()),
 
-                                  ref
-                                      .read(voiceMessageController.notifier)
-                                      .isRecording(
-                                          isRecording:
-                                              VoiceRecorderStates.notRecording);
-                                },
-                              ),
-                              12.0.sizedBoxWidth,
-                              const Icon(
-                                Icons.send_outlined,
-                                color: AppThemeColours.appGreen,
-                                size: 18,
-                              ).onTap(
-                                onTap: () async {
-                                  ref
-                                      .read(recordedVoiceMessageController
-                                          .notifier)
-                                      .isVoiceMessageRecorded(
-                                          recordedMessageURL: "");
+        //! DIVIDER
+        SizedBox(
+            height: 1.0.h,
+            child: Divider(
+                height: 1.0.h,
+                thickness: 0.8.sp,
+                color: AppThemeColours.appGreyBGColour)),
 
-                                  ref
-                                      .read(voiceMessageController.notifier)
-                                      .isRecording(
-                                          isRecording:
-                                              VoiceRecorderStates.notRecording);
-                                },
-                              ),
-                              12.0.sizedBoxWidth,
-                            ],
-                          );
-                        },
-                        error: (error, stackTrace) =>
-                            "$error $stackTrace".txt(),
-                        loading: () => const CircularProgressIndicator())
-                    : CircleAvatar(
+        //! SPACER
+        AppScreenUtils.verticalSpaceSmall,
+
+        //! BASE - TEXT FORM FIELD AND MIC ICON
+        Row(
+          children: [
+            Expanded(
+                child: MessagingTextFormField(
+                    controller: _messageEditingController,
+                    suffixIcon: Icons.send_outlined,
+                    hintText: AppTexts.writeAMessage,
+                    suffixIconColour: AppThemeColours.appBlue)),
+
+            //! SPACER
+            AppScreenUtils.horizontalSpaceSmall,
+
+            //! MIC
+            isVoiceRecording.when(
+              data: (recorderState) {
+                return recorderState == VoiceRecorderStates.notRecording
+                    ? CircleAvatar(
                         radius: 16.0.r,
-                        backgroundColor: AppThemeColours.appGreenTransparent,
-                        child: AvatarGlow(
-                          endRadius: 120,
-                          showTwoGlows: true,
-                          duration: const Duration(seconds: 2),
-                          glowColor: AppThemeColours.appGreen,
-                          child: Icon(
-                            Icons.send_outlined,
+                        backgroundColor: AppThemeColours.appBlue,
+                        child: Icon(Icons.mic_outlined,
                             size: 16.0.sp,
-                            color: AppThemeColours.appGreen,
-                          ),
-                        ),
+                            color: AppThemeColours.appWhiteBGColour),
                       ).onTap(
                         onTap: () async {
-                          if (await recorder.isRecording()) {
-                            String? recordedMessageURL = await recorder.stop();
+                          ref.read(voiceMessageController.notifier).isRecording(
+                              isRecording: VoiceRecorderStates.recording);
 
-                            if (recordedMessageURL != null) {
-                              ref
-                                  .read(recordedVoiceMessageController.notifier)
-                                  .isVoiceMessageRecorded(
-                                      recordedMessageURL: recordedMessageURL);
-                            }
-
-                            ref
-                                .read(voiceMessageController.notifier)
-                                .isRecording(
-                                    isRecording: VoiceRecorderStates.recorded);
-                          }
+                          await recorder.start();
                         },
-                      );
-          },
-          error: (error, stackTrace) => "$error $stackTrace".txt(),
-          loading: () => const CircularProgressIndicator(),
+                      )
+
+                    //! RECORDING DONE
+                    : recorderState == VoiceRecorderStates.recorded
+                        ? theRecordedMessageURL.when(
+                            data: (recordedFilePath) {
+                              return Row(
+                                children: [
+                                  //! FOR PLAY CONTROLS
+                                  isPlaying.when(
+                                    data: (playingState) {
+                                      return Icon(
+                                        playingState == PlayerState.stopped
+                                            ? Icons.play_arrow
+                                            : Icons.pause,
+                                        color: AppThemeColours.appBlue,
+                                        size: 18,
+                                      ).onTap(
+                                        onTap: () async {
+                                          //! PLAY BUTTON PRESSED
+                                          if (playingState ==
+                                              PlayerState.stopped) {
+                                            if (recordedFilePath.isNotEmpty) {
+                                              await player.play(
+                                                  UrlSource(recordedFilePath));
+
+                                              ref
+                                                  .read(
+                                                      voiceMessagePlayerController
+                                                          .notifier)
+                                                  .updateThePlayingState(
+                                                      playingState:
+                                                          PlayerState.playing);
+                                            }
+                                          }
+
+                                          //! PAUSE BUTTON PRESSED
+                                          else if (playingState ==
+                                              PlayerState.playing) {
+                                            await player.stop();
+
+                                            ref
+                                                .read(
+                                                    voiceMessagePlayerController
+                                                        .notifier)
+                                                .updateThePlayingState(
+                                                    playingState:
+                                                        PlayerState.stopped);
+                                          }
+                                        },
+                                      );
+                                    },
+                                    error: (error, stackTrace) =>
+                                        "$error $stackTrace".txt(),
+                                    loading: () =>
+                                        const CircularProgressIndicator(),
+                                  ),
+
+                                  //!
+                                  12.0.sizedBoxWidth,
+
+                                  //!
+                                  const Icon(
+                                    Icons.delete,
+                                    color: AppThemeColours.appRed,
+                                    size: 18,
+                                  ).onTap(
+                                    onTap: () async {
+                                      player.stop();
+
+                                      ref
+                                          .read(recordedVoiceMessageController
+                                              .notifier)
+                                          .isVoiceMessageRecorded(
+                                              recordedMessageURL: "");
+
+                                      ref
+                                          .read(voiceMessageController.notifier)
+                                          .isRecording(
+                                              isRecording: VoiceRecorderStates
+                                                  .notRecording);
+
+                                      ref
+                                          .read(voiceMessagePlayerController
+                                              .notifier)
+                                          .updateThePlayingState(
+                                              playingState:
+                                                  PlayerState.stopped);
+                                    },
+                                  ),
+
+                                  12.0.sizedBoxWidth,
+
+                                  const Icon(
+                                    Icons.send_outlined,
+                                    color: AppThemeColours.appGreen,
+                                    size: 18,
+                                  ).onTap(
+                                    onTap: () async {
+                                      //!:TODO PERFORM SEND ACTION
+                                      ref
+                                          .read(recordedVoiceMessageController
+                                              .notifier)
+                                          .isVoiceMessageRecorded(
+                                              recordedMessageURL: "");
+
+                                      ref
+                                          .read(voiceMessageController.notifier)
+                                          .isRecording(
+                                              isRecording: VoiceRecorderStates
+                                                  .notRecording);
+
+                                      ref
+                                          .read(voiceMessagePlayerController
+                                              .notifier)
+                                          .updateThePlayingState(
+                                              playingState:
+                                                  PlayerState.stopped);
+                                    },
+                                  ),
+                                  12.0.sizedBoxWidth,
+                                ],
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                "$error $stackTrace".txt(),
+                            loading: () => const CircularProgressIndicator(),
+                          )
+                        :
+
+                        //! IS RECORDING
+                        CircleAvatar(
+                            radius: 16.0.r,
+                            backgroundColor:
+                                AppThemeColours.appGreenTransparent,
+                            child: AvatarGlow(
+                              endRadius: 120,
+                              showTwoGlows: true,
+                              duration: const Duration(seconds: 2),
+                              glowColor: AppThemeColours.appGreen,
+                              child: Icon(
+                                Icons.mic,
+                                size: 16.0.sp,
+                                color: AppThemeColours.appGreen,
+                              ),
+                            ),
+                          ).onTap(
+                            onTap: () async {
+                              if (await recorder.isRecording()) {
+                                String? recordedMessageURL =
+                                    await recorder.stop();
+
+                                if (recordedMessageURL != null) {
+                                  ref
+                                      .read(recordedVoiceMessageController
+                                          .notifier)
+                                      .isVoiceMessageRecorded(
+                                          recordedMessageURL:
+                                              recordedMessageURL);
+                                }
+
+                                ref
+                                    .read(voiceMessageController.notifier)
+                                    .isRecording(
+                                        isRecording:
+                                            VoiceRecorderStates.recorded);
+                              }
+                            },
+                          );
+              },
+              error: (error, stackTrace) => "$error $stackTrace".txt(),
+              loading: () => const CircularProgressIndicator(),
+            ),
+          ],
         ),
-      ])
-    ]);
+      ],
+    );
   }
 }
 
