@@ -34,3 +34,16 @@ enum AppHapticFeedbackType {
 }
 
 enum FileType { image }
+
+enum OrganizationType {
+  school(orgName: "School"),
+  church(orgName: "Church"),
+  smallBusiness(orgName: "Small Business"),
+  transportCompany(orgName: "Transport Company");
+
+  final String orgName;
+
+  const OrganizationType({
+    required this.orgName,
+  });
+}

@@ -110,14 +110,17 @@ class _SignInScreenState extends State<SignInScreen> {
                     //! BUTTON
                     AppFadeAnimation(
                       delay: 1.6,
-                      child: AppElevatedButton(
-                        onPressed: () {
-                          AppNavigator.navigateToAndRemoveAllPreviousScreens(
-                            thePageRouteName: AppRoutes.dashboardWrapper,
-                            context: context,
-                          );
-                        },
-                        buttonTitle: AppTexts.login,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: AppElevatedButton(
+                          onPressed: () {
+                            AppNavigator.navigateToAndRemoveAllPreviousScreens(
+                              thePageRouteName: AppRoutes.basicSetup,
+                              context: context,
+                            );
+                          },
+                          buttonTitle: AppTexts.login,
+                        ),
                       ),
                     ),
                   ],

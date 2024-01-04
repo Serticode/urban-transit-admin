@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
 class AppElevatedButton extends StatelessWidget {
@@ -21,8 +22,8 @@ class AppElevatedButton extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return SizedBox(
-      height: 50.0,
-      width: double.infinity,
+      height: 60.0.h,
+      width: 394.0.w,
       child: ElevatedButton(
         //! ON PRESSED
         onPressed: () => onPressed!(),

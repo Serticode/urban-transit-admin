@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_transit_admin/router/routes.dart';
+import 'package:urban_transit_admin/screens/auth/basic_setup/basic_setup.dart';
 import 'package:urban_transit_admin/screens/auth/new_auth_setup/new_auth_setup.dart';
 import 'package:urban_transit_admin/screens/auth/new_auth_setup/widget/auth_success_or_failure.dart';
 import 'package:urban_transit_admin/screens/auth/otp_verification/otp_verification.dart';
@@ -62,7 +63,14 @@ class AppNavigator {
             args: routeSettings.arguments,
             view: const SignInScreen());
 
-      //! LOGIN SCREEN
+      //! BASIC SETUP
+      case AppRoutes.basicSetup:
+        return _getPageRoute(
+            routeName: routeSettings.name,
+            args: routeSettings.arguments,
+            view: const BasicSetup());
+
+      //! DASHBOARD WRAPPER
       case AppRoutes.dashboardWrapper:
         return _getPageRoute(
             routeName: routeSettings.name,

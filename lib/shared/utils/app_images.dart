@@ -12,4 +12,9 @@ abstract class AppImages {
   static const String user2 = "lib/assets/images/user2.png";
   static const String user3 = "lib/assets/images/user3.png";
   static const String resizeToDesktop = "lib/assets/images/resizeToDesktop.png";
+  static const String shimmerMap = "lib/assets/images/shimmerMap.png";
+}
+
+abstract class AppSVG {
+  static const String uploadImage = "lib/assets/icons/upload.svg";
 }

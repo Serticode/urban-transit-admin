@@ -118,7 +118,7 @@ class _SecuritySetupScreenState extends ConsumerState<SecuritySetupScreen> {
                   ),
 
                   //! SPACER
-                  AppScreenUtils.verticalSpaceMedium,
+                  AppScreenUtils.verticalSpaceSmall,
 
                   AppFadeAnimation(
                     delay: 1.8,
@@ -132,7 +132,7 @@ class _SecuritySetupScreenState extends ConsumerState<SecuritySetupScreen> {
                   ),
 
                   //! SPACER
-                  AppScreenUtils.verticalSpaceSmall,
+                  AppScreenUtils.verticalSpaceMedium,
 
                   //! BUTTON
                   AppFadeAnimation(
@@ -154,7 +154,7 @@ class _SecuritySetupScreenState extends ConsumerState<SecuritySetupScreen> {
                             ? AppThemeColours.appBlue
                             : AppThemeColours.elevatedButtonBackgroundColour,
                         buttonTitle: AppTexts.securitySetupSendOTP,
-                      ).ignorePointer(
+                      ).alignCenter().ignorePointer(
                           isLoading: _textFieldHasContent.value == false),
                     ),
                   )

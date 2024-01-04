@@ -8,6 +8,7 @@ class AppRoutes {
   static const String authSetupSuccessfulOrFailed =
       "authSetupSuccessfulOrFailed";
   static const String loginScreen = "loginScreen";
+  static const String basicSetup = "basicSetup";
 
   //! DASHBOARD
   static const String dashboardWrapper = "dashboardWrapper";

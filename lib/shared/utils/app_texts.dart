@@ -17,7 +17,7 @@ abstract class AppTexts {
   //! OTP VERIFICATION
   static const String otpVerification = "OTP Verification";
   static String otpVerificationNotice({required String userEmail}) =>
-      "Enter the 5 digit code sent to your email $userEmail";
+      "Enter the 5 digit code sent to your email \n$userEmail";
   static const String verifyOTP = "Verify OTP";
   static const resendOTP = "Resend OTP";
 
@@ -29,7 +29,7 @@ abstract class AppTexts {
   static const String setupDetails = "Setup Details";
   static const String authSuccessfulHeader = "Authentication Setup Successful";
   static const String authSuccessNotice =
-      "Successfully added, use your login information to access your dashboard and monitor your drivers";
+      "Successfully added, use your login \ninformation to access your dashboard and \nmonitor your drivers";
   static const String getStarted = "Get Started";
   static const String nileAdmin = "Nile Admin";
   static const String welcomeBack = "Welcome \nBack";
@@ -38,6 +38,13 @@ abstract class AppTexts {
   static const String organizationType = "School";
   static const String password = "Password";
   static const String login = "Login";
+  static const String basicSetup = "Basic Setup";
+  static const String basicSetupRider =
+      "To make your experience better we need some additional information about your organization";
+  static const String yourOrganizationName = "Your Organization’s Name";
+  static const String yourOrganizationType = "Organization Type";
+  static const String uploadProfileImage = "Upload Profile Image";
+  static const String saveAndGoToDashboard = "Save & Go to Dashboard";
 
   //! TEXT FORM FIELD - HINTS AND LABELS
   static const String emailHint = "youremail@example.com";

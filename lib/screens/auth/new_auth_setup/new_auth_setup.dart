@@ -154,15 +154,18 @@ class _NewAuthSetupState extends State<NewAuthSetup> {
                       //! BUTTON
                       AppFadeAnimation(
                           delay: 1.6,
-                          child: AppElevatedButton(
-                            //! ON PRESSED
-                            onPressed: () {
-                              AppNavigator.navigateToPage(
-                                  thePageRouteName:
-                                      AppRoutes.authSetupSuccessfulOrFailed,
-                                  context: context);
-                            },
-                            buttonTitle: AppTexts.setupDetails,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: AppElevatedButton(
+                              //! ON PRESSED
+                              onPressed: () {
+                                AppNavigator.navigateToPage(
+                                    thePageRouteName:
+                                        AppRoutes.authSetupSuccessfulOrFailed,
+                                    context: context);
+                              },
+                              buttonTitle: AppTexts.setupDetails,
+                            ),
                           )),
                     ],
                   ),

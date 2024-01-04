@@ -46,9 +46,14 @@ class AuthSuccessOrFailure extends StatelessWidget {
                   children: [
                     //! TITLE
                     AppFadeAnimation(
-                        delay: 1.2,
-                        child: Text(AppTexts.authSuccessfulHeader,
-                            style: textTheme.bodyLarge)),
+                      delay: 1.2,
+                      child: Text(
+                        AppTexts.authSuccessfulHeader,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontSize: 28.0.sp,
+                        ),
+                      ),
+                    ),
 
                     //! SPACER
                     AppScreenUtils.verticalSpaceMedium,
@@ -69,7 +74,12 @@ class AuthSuccessOrFailure extends StatelessWidget {
 
                     //! ADMIN TITLE
                     //!TODO: ADD CORRECT ADMIN HERE
-                    Text(AppTexts.nileAdmin, style: textTheme.bodyLarge),
+                    Text(
+                      AppTexts.nileAdmin,
+                      style: textTheme.bodyLarge?.copyWith(
+                        fontSize: 28.0.sp,
+                      ),
+                    ),
 
                     //! SPACER
                     AppScreenUtils.verticalSpaceMedium,
@@ -77,23 +87,28 @@ class AuthSuccessOrFailure extends StatelessWidget {
                     //! SUCCESS NOTICE
                     Text(
                       AppTexts.authSuccessNotice,
-                      style: textTheme.bodySmall
-                          ?.copyWith(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500, fontSize: 20.0.sp),
                     ),
 
                     //! SPACER
                     AppScreenUtils.verticalSpaceMedium,
 
                     //! BUTTON
-                    AppFadeAnimation(
-                      delay: 1.6,
-                      child: AppElevatedButton(
-                        onPressed: () {
-                          AppNavigator.navigateToPage(
-                              thePageRouteName: AppRoutes.loginScreen,
-                              context: context);
-                        },
-                        buttonTitle: AppTexts.getStarted,
+                    SizedBox(
+                      width: 497.0.w,
+                      child: AppFadeAnimation(
+                        delay: 1.6,
+                        child: AppElevatedButton(
+                          onPressed: () {
+                            AppNavigator.navigateToPage(
+                                thePageRouteName: AppRoutes.loginScreen,
+                                context: context);
+                          },
+                          buttonColour: AppThemeColours.appGreen,
+                          buttonTitle: AppTexts.getStarted,
+                        ),
                       ),
                     )
                   ],
