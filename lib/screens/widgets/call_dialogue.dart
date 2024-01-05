@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
@@ -183,12 +183,10 @@ class CallTitle extends ConsumerWidget {
               color: AppThemeColours.appBlueTransparent,
               borderRadius: BorderRadius.circular(10.0.r),
             ),
-            child: Center(
-              child: Icon(
-                PhosphorIcons.bold.chatText,
-                color: AppThemeColours.appBlue,
-              ),
-            ),
+            child: const Icon(
+              Icons.chat_outlined,
+              color: AppThemeColours.appBlue,
+            ).alignCenter(),
           ),
         ),
       ],
@@ -220,7 +218,7 @@ class CallCTA extends ConsumerWidget {
       IconButton(
         onPressed: () => onSpeakerPressed(),
         icon: Icon(
-          PhosphorIcons.bold.speakerHigh,
+          Icons.volume_up_rounded,
           size: 16.0.sp,
           color: isSpeakerActive != null && isSpeakerActive == true
               ? AppThemeColours.appBlue
@@ -237,7 +235,7 @@ class CallCTA extends ConsumerWidget {
         backgroundColor: AppThemeColours.appBlueTransparent,
         child: IconButton(
           onPressed: () => onSpeakerPressed(),
-          icon: Icon(PhosphorIcons.bold.phoneSlash,
+          icon: Icon(Icons.volume_mute,
               size: 16.0.sp, color: AppThemeColours.appBlue),
         ),
       ),
@@ -249,7 +247,7 @@ class CallCTA extends ConsumerWidget {
       IconButton(
         onPressed: () => onSpeakerPressed(),
         icon: Icon(
-          PhosphorIcons.bold.microphoneSlash,
+          Icons.mic_off,
           size: 16.0.sp,
           color: isMuteActive != null && isMuteActive == true
               ? AppThemeColours.appBlue

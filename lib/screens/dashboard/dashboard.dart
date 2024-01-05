@@ -6,11 +6,16 @@ import 'package:urban_transit_admin/services/controllers/dashboard_widget_contro
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
     final dashboardInboxWidgetState = ref.watch(dashboardInboxWidgetController);
     final dashboardDriversWidgetState =
         ref.watch(dashboardDriversWidgetController);

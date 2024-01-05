@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:urban_transit_admin/services/controllers/dashboard_page_controller.dart';
 import 'package:urban_transit_admin/services/controllers/drivers_page_controller.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
 import 'package:urban_transit_admin/shared/utils/app_fade_animation.dart';
+import 'package:urban_transit_admin/shared/utils/app_images.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/screens/widgets/app_elevated_button.dart';
@@ -309,24 +311,26 @@ class AddDriverWidget extends StatelessWidget {
           AppScreenUtils.verticalSpaceMedium,
 
           //! UPLOAD DOCUMENT SECTION
-          Center(
-              child: Container(
-                  width: 459.0.w,
-                  height: 181.0.h,
-                  decoration: BoxDecoration(
-                      color: AppThemeColours.appGreyBGColour.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(5.0.r)),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //! ICON
-                        Icon(Icons.cloud_upload_outlined,
-                            size: 32.0.sp, color: AppThemeColours.appGreen),
+          Container(
+            width: 459.0.w,
+            height: 181.0.h,
+            decoration: BoxDecoration(
+              color: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(5.0.r),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //! ICON
+                SvgPicture.asset(AppSVG.uploadImage),
 
-                        Text(AppTexts.uploadFileNotice,
-                            style: textTheme.bodyLarge!
-                                .copyWith(fontSize: 14.0.sp))
-                      ]))),
+                AppTexts.uploadFileNotice.txt(
+                  fontSize: 14.0.sp,
+                  color: AppThemeColours.bodyText2TextColour,
+                ),
+              ],
+            ),
+          ).alignCenter(),
 
           //! SPACER
           AppScreenUtils.verticalSpaceMedium,

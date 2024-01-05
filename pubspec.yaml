@@ -35,7 +35,6 @@ dependencies:
   flutter_riverpod: ^2.3.6
   image_picker: ^0.8.7+5
   flutter_svg: ^2.0.6
-  phosphor_flutter: ^2.0.0
   fpdart: ^0.6.0
   connectivity_plus: ^4.0.1
   intl: ^0.18.1
