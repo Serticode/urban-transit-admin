@@ -14,9 +14,8 @@ class DrawerIcon extends ConsumerWidget {
       height: 30,
       width: 30,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imageURL),
-        ),
+        borderRadius: BorderRadius.circular(2),
+        image: DecorationImage(image: AssetImage(imageURL), fit: BoxFit.cover),
       ),
     );
   }

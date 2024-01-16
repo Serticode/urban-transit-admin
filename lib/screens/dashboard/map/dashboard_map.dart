@@ -2,21 +2,23 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:latlng/latlng.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:latlng/latlng.dart';
 import 'package:location/location.dart';
 import 'package:map/map.dart';
 import 'package:urban_transit_admin/screens/dashboard/map/helpers/map_helpers.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
-import 'package:urban_transit_admin/theme/theme.dart';
 
-class DashboardMap extends StatefulWidget {
-  const DashboardMap({super.key});
+/* class DashboardMap extends StatefulWidget {
+  const DashboardMap({Key? key}) : super(key: key);
 
   @override
-  State<DashboardMap> createState() => _DashboardMapState();
+  DashboardMapState createState() => DashboardMapState();
 }
 
-class _DashboardMapState extends State<DashboardMap>
+class DashboardMapState extends State<DashboardMap>
     with AutomaticKeepAliveClientMixin {
   final Location location = Location();
   late MapController controller;
@@ -24,11 +26,15 @@ class _DashboardMapState extends State<DashboardMap>
   @override
   bool get wantKeepAlive => true;
 
+  final stations = <MetroStation>[];
+
   @override
   void initState() {
-    super.initState();
     controller = MapController(location: const LatLng(0, 0));
     _getUserLocation();
+    var all = lines.expand((element) => element.stations).toSet();
+    stations.addAll(all);
+    super.initState();
   }
 
   Future<void> _getUserLocation() async {
@@ -92,88 +98,172 @@ class _DashboardMapState extends State<DashboardMap>
     super.build(context);
 
     return Scaffold(
-        body: MapLayout(
-          controller: controller,
-          builder: (context, transformer) {
-            return GestureDetector(
+      body: MapLayout(
+        controller: controller,
+        builder: (context, transformer) {
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onDoubleTapDown: (details) => _onDoubleTap(
+              transformer,
+              details.localPosition,
+            ),
+            onScaleStart: _onScaleStart,
+            onScaleUpdate: (details) => _onScaleUpdate(details, transformer),
+            child: Listener(
               behavior: HitTestBehavior.opaque,
-              onDoubleTapDown: (details) => _onDoubleTap(
-                transformer,
-                details.localPosition,
+              onPointerSignal: (event) {
+                if (event is PointerScrollEvent) {
+                  final delta = event.scrollDelta.dy / -1000.0;
+                  final zoom = clamp(controller.zoom + delta, 2, 18);
+
+                  transformer.setZoomInPlace(zoom, event.localPosition);
+                  setState(() {});
+                }
+              },
+              child: Stack(
+                children: [
+                  TileLayer(
+                    builder: (context, x, y, z) {
+                      final tilesInZoom = pow(2.0, z).floor();
+
+                      while (x < 0) {
+                        x += tilesInZoom;
+                      }
+                      while (y < 0) {
+                        y += tilesInZoom;
+                      }
+
+                      x %= tilesInZoom;
+                      y %= tilesInZoom;
+                      return CachedNetworkImage(
+                        imageUrl: google(z, x, y),
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                  CustomPaint(
+                    painter: PolylinePainter(transformer),
+                  ),
+                  ...stations
+                      .map(
+                        (e) =>
+                            _buildStationMarker(e, Colors.black, transformer),
+                      )
+                      .toList(),
+                ],
               ),
-              onScaleStart: _onScaleStart,
-              onScaleUpdate: (details) => _onScaleUpdate(details, transformer),
-              child: Listener(
-                behavior: HitTestBehavior.opaque,
-                onPointerSignal: (event) {
-                  if (event is PointerScrollEvent) {
-                    final delta = event.scrollDelta.dy / -1000.0;
-                    final zoom = clamp(controller.zoom + delta, 2, 18);
+            ),
+          );
+        },
+      ),
 
-                    transformer.setZoomInPlace(zoom, event.localPosition);
-                    setState(() {});
-                  }
-                },
-                child: Stack(
-                  children: [
-                    TileLayer(
-                      builder: (context, x, y, z) {
-                        final tilesInZoom = pow(2.0, z).floor();
-
-                        while (x < 0) {
-                          x += tilesInZoom;
-                        }
-                        while (y < 0) {
-                          y += tilesInZoom;
-                        }
-
-                        x %= tilesInZoom;
-                        y %= tilesInZoom;
-
-                        return CachedNetworkImage(
-                          imageUrl: google(z, x, y),
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                    CustomPaint(
-                      painter: ViewportPainter(
-                        transformer.getViewport(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-
-        //!
-        floatingActionButton: FloatingActionButton(
-          onPressed: _gotoDefault,
-          tooltip: 'My Location',
-          backgroundColor: AppThemeColours.appBlue,
-          elevation: 42,
-          child: const Icon(Icons.my_location),
-        ));
+      //!
+      floatingActionButton: FloatingActionButton(
+        onPressed: _gotoDefault,
+        tooltip: 'My Location',
+        child: const Icon(Icons.my_location),
+      ),
+    );
   }
+
+  Widget _buildStationMarker(
+    MetroStation station,
+    Color color,
+    MapTransformer transformer, {
+    IconData icon = Icons.home,
+  }) {
+    var pos = transformer.toOffset(station.position);
+
+    return Positioned(
+      left: pos.dx - 12,
+      top: pos.dy - 12,
+      width: 24,
+      height: 24,
+      child: GestureDetector(
+        child: Icon(
+          icon,
+          color: color,
+          size: 24,
+        ),
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text('Station: ${station.name}'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+} */
+
+class DashboardMap extends ConsumerStatefulWidget {
+  const DashboardMap({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _DashboardMapState();
 }
 
-class ViewportPainter extends CustomPainter {
-  ViewportPainter(this.viewport);
-  final Rect viewport;
+class _DashboardMapState extends ConsumerState<DashboardMap> {
+  List<LatLng> polyLines = [];
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 1;
+  Future<void> fetchPolyLines() async {
+    LatLng start = const LatLng(37.7749, -122.4194); // Start point
+    LatLng destination = const LatLng(37.7749, -122.4294); // End point
 
-    canvas.drawRect(viewport, paint);
+    List<LatLng> result = await getPolyLines(start, destination);
+
+    setState(() {
+      polyLines = result;
+    });
   }
 
   @override
-  bool shouldRepaint(covariant ViewportPainter oldDelegate) =>
-      oldDelegate.viewport != viewport;
+  void initState() {
+    super.initState();
+    // Example usage
+    fetchPolyLines();
+  }
+
+  Future<List<LatLng>> getPolyLines(LatLng start, LatLng destination) async {
+    List<LatLng> polylinePoints = [];
+    PolylinePoints polylinePointsProvider = PolylinePoints();
+
+    PolylineResult result =
+        await polylinePointsProvider.getRouteBetweenCoordinates(
+      'YOUR_API_KEY', // Replace with your Google Maps API key
+      PointLatLng(start.latitude, start.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+      travelMode: TravelMode
+          .driving, // Specify the travel mode (driving, walking, etc.)
+    );
+
+    if (result.points.isNotEmpty) {
+      for (var point in result.points) {
+        polylinePoints.add(LatLng(point.latitude, point.longitude));
+      }
+    }
+
+    return polylinePoints;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(37.7749, -122.4194),
+        zoom: 12.0,
+      ),
+      polylines: {
+        //Polyline(data: data, paint: paint)
+        /* Polyline(
+          polylineId: PolylineId('route'),
+          color: Colors.blue,
+          points: polyLines,
+          width: 4,
+        ), */
+      },
+    );
+  }
 }

@@ -51,6 +51,7 @@ dependencies:
   flutter_sound_record: ^3.3.2
   shimmer: ^3.0.0
   dropdown_button2: ^2.3.8
+  flutter_polyline_points: ^2.0.0
 
 dev_dependencies:
   flutter_test:

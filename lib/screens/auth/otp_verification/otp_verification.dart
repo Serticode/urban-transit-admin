@@ -102,7 +102,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                       //! TODO: CHANGE THE MAIL BELOW
                       child: Text(
                         AppTexts.otpVerificationNotice(
-                            userEmail: "nile***@staff.edu.ng"),
+                            userEmail: "admin***@staff.edu.ng"),
                         textAlign: TextAlign.center,
                         style: textTheme.displayMedium,
                       ).alignCenter(),

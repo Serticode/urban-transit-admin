@@ -1,8 +1,8 @@
 abstract class AppTexts {
   //! APP NAME
-  static const appName = "Urban Transit Admin";
+  static const appName = "Bus Transit Admin";
   //! default email full
-  static const String defaultEmail = "nileuniversityadmin@staff.edu.ng";
+  static const String defaultEmail = "org@staff.com";
 
   //! SECURITY SETUP
   static const String securitySetup = "Security Setup";
@@ -31,7 +31,7 @@ abstract class AppTexts {
   static const String authSuccessNotice =
       "Successfully added, use your login \ninformation to access your dashboard and \nmonitor your drivers";
   static const String getStarted = "Get Started";
-  static const String nileAdmin = "Nile Admin";
+  static const String nileAdmin = "Admin";
   static const String welcomeBack = "Welcome \nBack";
   static const String userName = "Username";
   static const String organizationName = "Organization Name";
@@ -59,7 +59,7 @@ abstract class AppTexts {
   static const String adminInformation = "Admin Information";
   static const String call = "Calls";
   static const String writeAMessage = "Write a message";
-  static const String urbanTransit = "Urban Transit";
+  static const String urbanTransit = "Bus Transit";
   static const String inbox = "Inbox";
   static const String next = "Next";
   static const String addDriver = "Add Driver";

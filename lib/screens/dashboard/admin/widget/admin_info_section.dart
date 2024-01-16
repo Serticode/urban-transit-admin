@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:urban_transit_admin/shared/utils/app_extensions.dart';
+import 'package:urban_transit_admin/shared/utils/app_images.dart';
 import 'package:urban_transit_admin/shared/utils/app_screen_utils.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/screens/widgets/app_text_form_field.dart';
@@ -68,7 +69,7 @@ class _AdminInformationSectionState
                 image: const DecorationImage(
                     filterQuality: FilterQuality.high,
                     fit: BoxFit.contain,
-                    image: AssetImage("lib/assets/images/nile_uni_logo.png")),
+                    image: AssetImage(AppImages.nileAdmin)),
                 border: Border.all(color: AppThemeColours.appBlue),
               ),
             ),
@@ -107,8 +108,9 @@ class _AdminInformationSectionState
 
           //! ADMIN EMAIL TEXT FIELD
           AppTextFormField(
-              controller: _adminEmailController,
-              hintText: "nileuniversityadmin@staff.edu.ng"),
+            controller: _adminEmailController,
+            hintText: AppTexts.defaultEmail,
+          ),
 
           //! SPACER
           AppScreenUtils.verticalSpaceMedium,
@@ -122,7 +124,7 @@ class _AdminInformationSectionState
 
           //! USER NAME TEXT FIELD
           AppTextFormField(
-              controller: _userNameController, hintText: "Nile Admin"),
+              controller: _userNameController, hintText: "Nadia Danielle"),
 
           //! SPACER
           AppScreenUtils.verticalSpaceMedium,
@@ -136,8 +138,9 @@ class _AdminInformationSectionState
 
           //! ORGANIZATION NAME TEXT FIELD
           AppTextFormField(
-              controller: _organizationNameTextController,
-              hintText: "Nile University"),
+            controller: _organizationNameTextController,
+            hintText: "Bus Transit Org",
+          ),
 
           //! SPACER
           AppScreenUtils.verticalSpaceMedium,
@@ -151,7 +154,9 @@ class _AdminInformationSectionState
 
           //! ORGANIZATION TYPE TEXT FIELD
           AppTextFormField(
-              controller: _organizationTypeTextController, hintText: "School"),
+            controller: _organizationTypeTextController,
+            hintText: "org@school.com",
+          ),
 
           //! SPACER
           AppScreenUtils.verticalSpaceLarge,
