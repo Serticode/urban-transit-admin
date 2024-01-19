@@ -16,7 +16,11 @@ class DashboardMap extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DashboardMapState();
 }
 
-class _DashboardMapState extends ConsumerState<DashboardMap> {
+class _DashboardMapState extends ConsumerState<DashboardMap>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   LatLng? _userLocation;
   final Location _location = Location();
   List<LatLng> directions = [];
@@ -51,6 +55,8 @@ class _DashboardMapState extends ConsumerState<DashboardMap> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       body: _userLocation == null
           ? const Center(child: CircularProgressIndicator())

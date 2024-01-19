@@ -10,11 +10,18 @@ import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.
 import 'package:urban_transit_admin/shared/constants/env_constants.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
+import 'package:universal_html/js.dart' as js;
+import 'package:universal_html/html.dart' as html;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ENVConstants.name);
+
+  js.context[ENVConstants.mapsApiKey] = dotenv.get(ENVConstants.mapsApiKey);
+  html.document.dispatchEvent(
+    html.CustomEvent(ENVConstants.mapsApiEvent),
+  );
 
   runApp(
     const ProviderScope(child: UrbanTransitAdmin()),

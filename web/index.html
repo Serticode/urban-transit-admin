@@ -16,6 +16,19 @@
     <link rel="apple-touch-icon" href="icons/Icon-192.png" />
 
     <!-- TODO: Add your Google Maps API key here -->
+    <script>
+      document.addEventListener("google-maps-api-key-loaded", function () {
+        var apiKey = window.MAPS_API_KEY;
+        var script = document.createElement("script");
+        script.src =
+          "https://maps.googleapis.com/maps/api/js?key=" +
+          apiKey +
+          "&callback=initMap";
+        script.defer = true;
+        script.async = true;
+        document.head.appendChild(script);
+      });
+    </script>
 
     <!-- Favicon -->
     <!-- Favicon -->
