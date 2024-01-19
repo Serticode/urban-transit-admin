@@ -1,16 +1,20 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:urban_transit_admin/router/router.dart';
 import 'package:urban_transit_admin/screens/landing_page/landing_page.dart';
 import 'package:urban_transit_admin/screens/resize_to_desktop/resize_to_desktop.dart';
+import 'package:urban_transit_admin/shared/constants/env_constants.dart';
 import 'package:urban_transit_admin/shared/utils/app_texts.dart';
 import 'package:urban_transit_admin/theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ENVConstants.name);
 
   runApp(
     const ProviderScope(child: UrbanTransitAdmin()),

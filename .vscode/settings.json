@@ -2,17 +2,22 @@
   "cSpell.words": [
     "Autovalidate",
     "dirn",
+    "dlat",
+    "dlng",
+    "dotenv",
     "enroute",
     "fpdart",
     "Ikeja",
     "ikorodu",
     "Ikotun",
     "latlng",
+    "OIRHs",
     "pinput",
     "Polyline",
     "polylines",
     "screenutil",
     "scrollbars",
-    "urbantransit"
+    "urbantransit",
+    "webservices"
   ]
 }
