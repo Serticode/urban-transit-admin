@@ -23,4 +23,21 @@ class MetroStation {
   final String name;
   final LatLng position;
   final bool underConstruction;
+
+  @override
+  String toString() => "\nSta: $name \nPos: $position";
+
+  @override
+  bool operator ==(covariant MetroStation other) {
+    if (identical(this, other)) return true;
+
+    return other.name == name &&
+        other.position == position &&
+        other.underConstruction == underConstruction;
+  }
+
+  @override
+  int get hashCode {
+    return name.hashCode ^ position.hashCode ^ underConstruction.hashCode;
+  }
 }

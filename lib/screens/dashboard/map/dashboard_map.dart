@@ -5,6 +5,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:location/location.dart";
 import "package:urban_transit_admin/screens/dashboard/map/helpers/map_helpers.dart";
+import "package:urban_transit_admin/services/models/drivers/driver.dart";
 import "package:urban_transit_admin/services/repository/directions_repository.dart";
 import "package:urban_transit_admin/shared/utils/app_extensions.dart";
 import "package:urban_transit_admin/theme/theme.dart";
@@ -29,22 +30,66 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
   Set<Marker> markers = {};
   Set<Circle> circles = {};
 
-  void _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      mapController = controller;
-    });
-  }
+  void _onMapCreated(GoogleMapController controller) =>
+      setState(() => mapController = controller);
 
   Future<void> _getUserLocation() async {
     try {
       var currentLocation = await _location.getLocation();
-      setState(() {
-        _userLocation =
-            LatLng(currentLocation.latitude!, currentLocation.longitude!);
-      });
+      setState(
+        () => _userLocation =
+            LatLng(currentLocation.latitude!, currentLocation.longitude!),
+      );
     } catch (e) {
       ("Error getting user location: $e").log();
     }
+  }
+
+  Set<Marker> _createDriverMarkers({required List<Driver> drivers}) {
+    return drivers.map(
+      (driver) {
+        return Marker(
+          markerId: MarkerId(driver.driverID!),
+          position: driver.assignedStation!.position,
+          onTap: () => _onDriverMarkerTap(driver),
+        );
+      },
+    ).toSet();
+  }
+
+  void _onDriverMarkerTap(Driver driver) async {
+    await getDirections(
+      origin: driver.assignedStation!.position,
+      destination: driver.destinationStation!.position,
+    );
+
+    mapController?.showMarkerInfoWindow(MarkerId(driver.driverID!));
+  }
+
+  Future<void> _updateDrivers() async {
+    final List<Driver> drivers = List.generate(
+      5,
+      (index) {
+        final assignedStation = MapHelper.lines
+            .expand((line) => line.stations)
+            .toList()
+            .elementAt(
+              index % MapHelper.lines.expand((line) => line.stations).length,
+            );
+
+        return Driver(
+          driverID: "Driver_$index",
+          driverName: "Driver $index",
+          driverBusDetails: "Bus_$index",
+          assignedStation: assignedStation,
+          destinationStation: MapHelper.getDestinationPoint(
+            startPoint: assignedStation,
+          ),
+        );
+      },
+    );
+
+    setState(() => markers = _createDriverMarkers(drivers: drivers));
   }
 
   @override
@@ -82,15 +127,8 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
 
       //!
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final positions = MapHelper.switchStartAndEndPoints();
-
-          await getDirections(
-            origin: positions.elementAt(0),
-            destination: positions.elementAt(1),
-          );
-        },
-        child: const Icon(Icons.directions),
+        onPressed: _updateDrivers,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
@@ -138,11 +176,9 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
         },
       );
 
-      LatLngBounds bounds = getBounds([
-        ...polylines.first.points,
-        startMarker.position,
-        endMarker.position
-      ]);
+      LatLngBounds bounds = getBounds(
+        [...polylines.first.points, startMarker.position, endMarker.position],
+      );
       mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
     } else {
       "Error getting directions".log();
