@@ -5,9 +5,11 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:location/location.dart";
 import "package:urban_transit_admin/screens/dashboard/map/helpers/map_helpers.dart";
+import "package:urban_transit_admin/screens/widgets/app_text_form_field.dart";
 import "package:urban_transit_admin/services/models/drivers/driver.dart";
 import "package:urban_transit_admin/services/repository/directions_repository.dart";
 import "package:urban_transit_admin/shared/utils/app_extensions.dart";
+import "package:urban_transit_admin/shared/utils/app_screen_utils.dart";
 import "package:urban_transit_admin/theme/theme.dart";
 
 class DashboardMap extends ConsumerStatefulWidget {
@@ -21,6 +23,7 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  final TextEditingController _addressCOntroller = TextEditingController();
 
   LatLng? _userLocation;
   final Location _location = Location();
@@ -118,7 +121,44 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
                 Marker(
                   markerId: const MarkerId("userMarker"),
                   position: _userLocation!,
-                  infoWindow: const InfoWindow(title: "Your Location"),
+                  //infoWindow: const InfoWindow(title: "Your Location"),
+                  onTap: () {
+                    AppScreenUtils.showAppDialogBox(
+                      theBuildContext: context,
+                      width: 600,
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              "Enter the address".txt24().alignCenterLeft(),
+                              IconButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: const Icon(Icons.close),
+                              )
+                            ],
+                          ),
+
+                          //!
+                          21.0.sizedBoxHeight,
+
+                          //!
+                          AppTextFormField(
+                            controller: _addressCOntroller,
+                            hintText: "Enter address",
+                            onChanged: (content) {
+                              content.log();
+                            },
+                            onFieldSubmitted: (content) {
+                              content?.log();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 ...markers,
               },

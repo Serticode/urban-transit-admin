@@ -162,7 +162,7 @@ abstract class AppScreenUtils {
           barrierColor: AppThemeColours.appDialogueBarrierColour,
 
           //! OTHER NEEDED PARAMETERS
-          barrierDismissible: false,
+          barrierDismissible: true,
           barrierLabel: "App Default Dialogue",
           context: theBuildContext,
 

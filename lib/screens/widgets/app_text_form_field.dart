@@ -15,6 +15,7 @@ class AppTextFormField extends ConsumerWidget {
   final Color? suffixIconColour;
   final EdgeInsets? padding;
   final void Function(String)? onChanged;
+  final void Function(String?)? onFieldSubmitted;
 
   //! CONSTRUCTOR
   const AppTextFormField({
@@ -25,6 +26,7 @@ class AppTextFormField extends ConsumerWidget {
     this.validator,
     this.obscuringCharacter,
     this.onChanged,
+    this.onFieldSubmitted,
     this.hintText,
     this.suffixIcon,
     this.suffixIconColour,
@@ -126,6 +128,7 @@ class AppTextFormField extends ConsumerWidget {
       //! FUNCTIONS
       validator: validator,
       onChanged: onChanged,
+      onSaved: onFieldSubmitted,
     );
   }
 }

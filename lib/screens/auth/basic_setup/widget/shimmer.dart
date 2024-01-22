@@ -14,15 +14,15 @@ class BasicSetupShimmer extends ConsumerWidget {
     return Stack(
       children: [
         Shimmer.fromColors(
-          baseColor: Colors.grey.shade200,
+          baseColor: Colors.grey.shade500,
           highlightColor: Colors.grey.shade300,
           child: const DashboardMap(),
         ),
         Stack(
           children: [
             Shimmer.fromColors(
-              baseColor: AppThemeColours.appGrey.withOpacity(0.2),
-              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+              baseColor: AppThemeColours.appGrey.withOpacity(0.5),
+              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.5),
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width * 0.15,
@@ -34,31 +34,37 @@ class BasicSetupShimmer extends ConsumerWidget {
                   ),
                 ),
               ),
-            ).align(Alignment.topLeft),
+            ).align(
+              Alignment.topLeft,
+            ),
 
             //!
             Shimmer.fromColors(
-              baseColor: AppThemeColours.appGrey.withOpacity(0.2),
-              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+              baseColor: AppThemeColours.appGrey.withOpacity(0.5),
+              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.5),
               child: DashboardInboxView(
                 height: MediaQuery.of(context).size.height * 0.1,
                 minimize: () {},
                 maximize: () {},
                 close: () {},
               ),
-            ).generalVerticalPadding.align(Alignment.topRight),
+            ).generalVerticalPadding.align(
+                  Alignment.topRight,
+                ),
 
             //!
             Shimmer.fromColors(
-              baseColor: AppThemeColours.appGrey.withOpacity(0.2),
-              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+              baseColor: AppThemeColours.appGrey.withOpacity(0.5),
+              highlightColor: AppThemeColours.appGreyBGColour.withOpacity(0.5),
               child: DashboardInboxView(
                 height: MediaQuery.of(context).size.height * 0.1,
                 minimize: () {},
                 maximize: () {},
                 close: () {},
               ),
-            ).generalVerticalPadding.align(Alignment.bottomRight),
+            ).generalVerticalPadding.align(
+                  Alignment.bottomRight,
+                ),
           ],
         )
       ],

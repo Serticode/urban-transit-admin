@@ -89,7 +89,9 @@ class AuthSuccessOrFailure extends StatelessWidget {
                       AppTexts.authSuccessNotice,
                       textAlign: TextAlign.center,
                       style: textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500, fontSize: 20.0.sp),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18.0.sp,
+                      ),
                     ),
 
                     //! SPACER

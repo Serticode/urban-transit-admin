@@ -1,43 +1,40 @@
 import "dart:math";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:urban_transit_admin/services/models/metro_station/metro_station.dart";
-import "package:urban_transit_admin/theme/theme.dart";
 
 //!
 //! SAMPLE STATIONS
-
 class MapHelper {
   const MapHelper();
 
-  static final ikorodu = MetroStation(
+  static const ikorodu = MetroStation(
     name: "Ikorodu",
-    position: const LatLng(6.616865, 3.508072),
+    position: LatLng(6.616865, 3.508072),
   );
 
-  static final cms = MetroStation(
+  static const cms = MetroStation(
     name: "CMS",
-    position: const LatLng(6.4488, 3.3910),
+    position: LatLng(6.4488, 3.3910),
   );
 
-  static final anthony = MetroStation(
+  static const anthony = MetroStation(
     name: "Anthony",
-    position: const LatLng(6.5594, 3.3689),
+    position: LatLng(6.5594, 3.3689),
   );
 
-  static final ikotun = MetroStation(
+  static const ikotun = MetroStation(
     name: "Ikotun",
-    position: const LatLng(6.5479921, 3.2678211),
+    position: LatLng(6.5479921, 3.2678211),
   );
 
-  static final ikeja = MetroStation(
+  static const ikeja = MetroStation(
     name: "Ikeja",
-    position: const LatLng(6.5921, 3.3386),
+    position: LatLng(6.5921, 3.3386),
   );
 
   //! LINES
-  static final _line1 = MetroLine(
+  static const _line1 = MetroLine(
     name: "Line 1",
-    color: AppThemeColours.activeButtonBlue,
     stations: [
       ikorodu,
       anthony,
@@ -45,16 +42,15 @@ class MapHelper {
     ],
   );
 
-  static final _line2 = MetroLine(
+  static const _line2 = MetroLine(
     name: "Line 2",
-    color: AppThemeColours.appAmber,
     stations: [
       ikeja,
       ikotun,
     ],
   );
 
-  static final lines = [_line1, _line2];
+  static const lines = [_line1, _line2];
 
   //!
   static MetroStation getDestinationPoint({
