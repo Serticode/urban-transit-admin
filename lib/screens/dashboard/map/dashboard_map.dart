@@ -1,13 +1,16 @@
 import "dart:async";
 import "dart:math";
 import "package:flutter/material.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
+import "package:google_places_flutter/google_places_flutter.dart";
+import "package:google_places_flutter/model/prediction.dart";
 import "package:location/location.dart";
 import "package:urban_transit_admin/screens/dashboard/map/helpers/map_helpers.dart";
-import "package:urban_transit_admin/screens/widgets/app_text_form_field.dart";
 import "package:urban_transit_admin/services/models/drivers/driver.dart";
 import "package:urban_transit_admin/services/repository/directions_repository.dart";
+import "package:urban_transit_admin/shared/constants/env_constants.dart";
 import "package:urban_transit_admin/shared/utils/app_extensions.dart";
 import "package:urban_transit_admin/shared/utils/app_screen_utils.dart";
 import "package:urban_transit_admin/theme/theme.dart";
@@ -23,7 +26,7 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  final TextEditingController _addressCOntroller = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   LatLng? _userLocation;
   final Location _location = Location();
@@ -33,8 +36,9 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
   Set<Marker> markers = {};
   Set<Circle> circles = {};
 
-  void _onMapCreated(GoogleMapController controller) =>
-      setState(() => mapController = controller);
+  void _onMapCreated(GoogleMapController addressController) => setState(
+        () => mapController = addressController,
+      );
 
   Future<void> _getUserLocation() async {
     try {
@@ -145,15 +149,63 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
                           21.0.sizedBoxHeight,
 
                           //!
-                          AppTextFormField(
-                            controller: _addressCOntroller,
-                            hintText: "Enter address",
-                            onChanged: (content) {
-                              content.log();
+                          GooglePlaceAutoCompleteTextField(
+                            textEditingController: _addressController,
+                            googleAPIKey: dotenv.get(ENVConstants.mapsApiKey),
+                            inputDecoration: const InputDecoration(
+                              hintText: "Search your location",
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                            ),
+                            debounceTime: 400,
+                            countries: const ["ng"],
+                            isLatLngRequired: true,
+                            getPlaceDetailWithLatLng: (Prediction prediction) {
+                              "Place LAT: ${prediction.lat}".log();
+                              "Place LNG: ${prediction.lng}".log();
+
+                              LatLng destinationLatLng = LatLng(
+                                double.parse(prediction.lat!),
+                                double.parse(prediction.lng!),
+                              );
+
+                              updatePolylines(
+                                _userLocation!,
+                                destinationLatLng,
+                              );
                             },
-                            onFieldSubmitted: (content) {
-                              content?.log();
+                            itemClick: (Prediction prediction) async {
+                              _addressController.text =
+                                  prediction.description ?? "";
+                              _addressController.selection =
+                                  TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: prediction.description?.length ?? 0,
+                                ),
+                              );
+
+                              Navigator.of(context).pop();
                             },
+                            seperatedBuilder: const Divider(),
+                            containerHorizontalPadding: 10,
+                            itemBuilder:
+                                (context, index, Prediction prediction) {
+                              return Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    Expanded(
+                                      child: Text(prediction.description ?? ""),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                            isCrossBtnShown: true,
                           ),
                         ],
                       ),
@@ -242,5 +294,50 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
       southwest: LatLng(minLat, minLng),
       northeast: LatLng(maxLat, maxLng),
     );
+  }
+
+  Future<void> updatePolylines(LatLng origin, LatLng destination) async {
+    DirectionsRepository directionsRepository = DirectionsRepository();
+
+    Map<String, dynamic>? result = await directionsRepository.fetchPolyLines(
+      origin: origin,
+      destination: destination,
+    );
+
+    if (result != null) {
+      Set<Polyline> newPolylines = result["polylines"];
+      Marker startMarker = result["startMarker"];
+      Marker endMarker = result["endMarker"];
+
+      setState(() {
+        polylines = newPolylines;
+        markers = {startMarker, endMarker};
+        circles = {
+          Circle(
+            circleId: CircleId(startMarker.mapsId.value),
+            center: startMarker.position,
+            radius: 100,
+            fillColor: AppThemeColours.appGreen.withOpacity(0.3),
+            strokeWidth: 2,
+            strokeColor: AppThemeColours.appBlue,
+          ),
+          Circle(
+            circleId: CircleId(endMarker.mapsId.value),
+            center: endMarker.position,
+            radius: 100,
+            fillColor: AppThemeColours.appGreen.withOpacity(0.3),
+            strokeWidth: 2,
+            strokeColor: AppThemeColours.appBlue,
+          ),
+        };
+      });
+
+      LatLngBounds bounds = getBounds(
+        [...polylines.first.points, startMarker.position, endMarker.position],
+      );
+      mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+    } else {
+      "Error getting directions".log();
+    }
   }
 }
