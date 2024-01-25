@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta
+      name="Urban Transit Admin"
+      content="Find appropriate content description" />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Urban Transit Admin" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+    <!-- TODO: Add your Google Maps API key here -->
+    <script>
+      document.addEventListener("google-maps-api-key-loaded", function () {
+        var apiKey = window.MAPS_API_KEY;
+        var script = document.createElement("script");
+        script.src =
+          "https://maps.googleapis.com/maps/api/js?key=" +
+          apiKey +
+          "&callback=initMap";
+        script.defer = true;
+        script.async = true;
+        document.head.appendChild(script);
+      });
+    </script>
+
+    <!-- Favicon -->
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="favicon.ico" />
+
+    <title>Urban Transit Admin</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <script>
+      // The value below is injected by flutter build, do not touch.
+      const serviceWorkerVersion = "1609189672";
+    </script>
+    <!-- This script adds the flutter initialization JS code -->
+    <script src="flutter.js" defer></script>
+
+    <style>
+      .flt-glass-pane {
+        min-width: 1440px;
+        min-height: 1024px;
+      }
+
+      body {
+        min-width: 1440px;
+        min-height: 1024px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      window.addEventListener("load", function (ev) {
+        // Download main.dart.js
+        _flutter.loader
+          .loadEntrypoint({
+            serviceWorker: {
+              serviceWorkerVersion: serviceWorkerVersion,
+            },
+          })
+          .then(function (engineInitializer) {
+            return engineInitializer.initializeEngine();
+          })
+          .then(function (appRunner) {
+            return appRunner.runApp();
+          });
+      });
+    </script>
+  </body>
+</html>
