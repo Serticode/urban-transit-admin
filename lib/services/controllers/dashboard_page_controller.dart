@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum DashboardDrawerPages {
@@ -10,15 +9,13 @@ enum DashboardDrawerPages {
 }
 
 final dashboardPageController =
-    AsyncNotifierProvider<DashboardPageController, DashboardDrawerPages>(
-  DashboardPageController.new,
+    StateNotifierProvider<DashboardPageController, DashboardDrawerPages>(
+  (ref) => DashboardPageController(),
 );
 
-class DashboardPageController extends AsyncNotifier<DashboardDrawerPages> {
-  //!
-  @override
-  FutureOr<DashboardDrawerPages> build() => DashboardDrawerPages.driversPage;
+class DashboardPageController extends StateNotifier<DashboardDrawerPages> {
+  DashboardPageController() : super(DashboardDrawerPages.dashboardPage);
 
   void setCurrentPage({required DashboardDrawerPages currentPage}) =>
-      state = AsyncValue.data(currentPage);
+      state = currentPage;
 }

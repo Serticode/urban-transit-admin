@@ -74,7 +74,7 @@ class _AddDriverState extends ConsumerState<AddDriver>
                 child: Icon(Icons.arrow_back,
                     size: 18.0.sp, color: AppThemeColours.appBlue),
               ).onTap(
-                onTap: () => ref.read(dashboardPageController).value ==
+                onTap: () => ref.read(dashboardPageController) ==
                         DashboardDrawerPages.adminPage
                     ? Navigator.of(context).pop()
                     : ref

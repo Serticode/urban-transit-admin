@@ -118,7 +118,7 @@ class DriverStatusWidget extends StatelessWidget {
 
     return Container(
       width: 400.0.w,
-      height: 120.0.h,
+      height: 150.0.h,
       padding: AppScreenUtils.containerPaddingTiny,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
@@ -126,6 +126,7 @@ class DriverStatusWidget extends StatelessWidget {
 
       //! CHILD
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           //! FIRST ROW - CURRENT STATUS DETAILS
           Row(

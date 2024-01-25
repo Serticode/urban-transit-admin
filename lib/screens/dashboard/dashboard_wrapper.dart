@@ -102,9 +102,9 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                 children: [
                   //! MAP
                   Visibility(
-                    visible: currentPage.value ==
-                            DashboardDrawerPages.dashboardPage ||
-                        currentPage.value == DashboardDrawerPages.driversPage,
+                    visible:
+                        currentPage == DashboardDrawerPages.dashboardPage ||
+                            currentPage == DashboardDrawerPages.driversPage,
                     child: const DashboardMap(),
                   ),
 
@@ -117,11 +117,12 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                       12.0.sizedBoxWidth,
 
                       Expanded(
-                        child: currentPage.when(
-                          data: (pageName) {
+                        child: Consumer(
+                          builder: (context, ref, child) {
                             late Widget driversPageWidgetToBeShown;
 
-                            if (pageName == DashboardDrawerPages.driversPage) {
+                            if (currentPage ==
+                                DashboardDrawerPages.driversPage) {
                               final pageToBeShown =
                                   driversPageVisibleWidget.value;
 
@@ -145,7 +146,7 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                               }
                             }
 
-                            return switch (pageName) {
+                            return switch (currentPage) {
                               DashboardDrawerPages.adminPage =>
                                 const AdminInformation(),
                               DashboardDrawerPages.dashboardPage =>
@@ -157,9 +158,6 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                               DashboardDrawerPages.inflowPage => const Inflow(),
                             };
                           },
-                          error: (error, stackTrace) =>
-                              "$error $stackTrace".txt(),
-                          loading: () => const CircularProgressIndicator(),
                         ),
                       )
                     ],
@@ -204,12 +202,12 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
           //! ADD THE CHILD OF THE BUILDER; CARRYING THE MENU ITEM
           child: DashboardDrawerOption(
             isCurrentPage: DashboardDrawerPages.values
-                    .indexOf(ref.watch(dashboardPageController).value!) ==
+                    .indexOf(ref.watch(dashboardPageController)!) ==
                 _menus.indexOf(element) + 1,
             title: element,
             logo: _menuIcons.elementAt(_menus.indexOf(element)),
             logoColour: DashboardDrawerPages.values
-                        .indexOf(ref.watch(dashboardPageController).value!) ==
+                        .indexOf(ref.watch(dashboardPageController)!) ==
                     _menus.indexOf(element) + 1
                 ? AppThemeColours.appBlue
                 : AppThemeColours.appGrey,
