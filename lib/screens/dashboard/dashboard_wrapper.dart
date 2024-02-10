@@ -221,7 +221,7 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                   .elementAt(_menus.indexOf(element) + 1)
                   .log();
             },
-            isDrawerOpen: ref.watch(drawerOpenController).value!,
+            isDrawerOpen: ref.watch(drawerOpenController)!,
           ),
         ),
       );

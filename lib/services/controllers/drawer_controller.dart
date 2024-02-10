@@ -1,16 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final drawerOpenController = AsyncNotifierProvider<DrawerOpenController, bool>(
-  DrawerOpenController.new,
+final drawerOpenController = StateNotifierProvider<DrawerOpenController, bool>(
+  (ref) => DrawerOpenController(),
 );
 
-class DrawerOpenController extends AsyncNotifier<bool> {
-  //!
-  @override
-  FutureOr<bool> build() => true;
+class DrawerOpenController extends StateNotifier<bool> {
+  DrawerOpenController() : super(true);
 
-  void isDrawerOpen({required bool isDrawerOpen}) =>
-      state = AsyncValue.data(isDrawerOpen);
+  void isDrawerOpen({required bool isDrawerOpen}) => state = isDrawerOpen;
 }

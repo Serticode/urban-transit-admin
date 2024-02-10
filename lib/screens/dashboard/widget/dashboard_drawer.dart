@@ -80,208 +80,199 @@ class _DashboardDrawerState extends ConsumerState<DashboardDrawer>
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final theDrawerOpenController = ref.watch(drawerOpenController);
+    final isDrawerOpen = ref.watch(drawerOpenController);
 
-    return theDrawerOpenController.when(
-      data: (isDrawerOpen) {
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.fastOutSlowIn,
-          width: isDrawerOpen ? 230 : 90,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.fastOutSlowIn,
+      width: isDrawerOpen ? 230 : 90,
 
-          decoration: BoxDecoration(
-            color: AppThemeColours.appWhiteBGColour,
-            boxShadow: [
-              BoxShadow(
-                color: AppThemeColours.appGreyBGColour.withOpacity(0.2),
-                blurRadius: 32.0.sp,
-              )
-            ],
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(20.0),
-              bottomRight: Radius.circular(20.0),
-            ),
+      decoration: BoxDecoration(
+        color: AppThemeColours.appWhiteBGColour,
+        boxShadow: [
+          BoxShadow(
+            color: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+            blurRadius: 32.0.sp,
+          )
+        ],
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(20.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+      ),
+
+      //! DRAWER
+      child: Drawer(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
           ),
-
-          //! DRAWER
-          child: Drawer(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0),
-                bottomRight: Radius.circular(20.0),
-              ),
-            ),
-            shadowColor: AppThemeColours.appGreyBGColour.withOpacity(0.2),
-            elevation: 12.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+        ),
+        shadowColor: AppThemeColours.appGreyBGColour.withOpacity(0.2),
+        elevation: 12.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //! BACK BUTTON
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                //! BACK BUTTON
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: const BoxDecoration(
-                        color: AppThemeColours.appBlueTransparent,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20.0),
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0),
-                        ),
-                      ),
-                      child: Icon(
-                        isDrawerOpen
-                            ? Icons.arrow_back_ios
-                            : Icons.arrow_forward_ios,
-                        size: 18.0.sp,
-                        color: AppThemeColours.iconColour,
-                      ).onTap(
-                        onTap: () => ref
-                            .read(drawerOpenController.notifier)
-                            .isDrawerOpen(isDrawerOpen: !isDrawerOpen),
-                      ),
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: const BoxDecoration(
+                    color: AppThemeColours.appBlueTransparent,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(5.0),
+                      bottomLeft: Radius.circular(5.0),
+                    ),
+                  ),
+                  child: Icon(
+                    isDrawerOpen
+                        ? Icons.arrow_back_ios
+                        : Icons.arrow_forward_ios,
+                    size: 18.0.sp,
+                    color: AppThemeColours.iconColour,
+                  ).onTap(
+                    onTap: () => ref
+                        .read(drawerOpenController.notifier)
+                        .isDrawerOpen(isDrawerOpen: !isDrawerOpen),
+                  ),
+                )
+              ],
+            ),
+
+            //! SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
+            //! APP LOGO
+            !isDrawerOpen
+                ? const DrawerIcon(imageURL: AppImages.urbanTransit)
+                    .generalPadding
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        //! IMAGE
+                        const DrawerIcon(imageURL: AppImages.urbanTransit),
+
+                        //! SPACER
+                        AppScreenUtils.horizontalSpaceSmall,
+
+                        Expanded(
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            child: Visibility(
+                              visible: isDrawerOpen,
+                              child: Text(
+                                AppTexts.urbanTransit,
+                                style: textTheme.bodyLarge!
+                                    .copyWith(fontSize: 14.0, height: 1.0),
+                              ),
+                            ),
+                          ),
+                        )
+                      ]).generalPadding,
+
+            //! SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
+            //! DIVIDER
+            const SizedBox(height: 0.8, child: Divider(thickness: 0.8)),
+
+            //! SPACER
+            AppScreenUtils.verticalSpaceMedium,
+
+            //!
+            //! OFFICE NAME
+            !isDrawerOpen
+                ? const DrawerIcon(imageURL: AppImages.nileAdmin)
+                    .generalPadding
+                    .onTap(
+                      onTap: () => ref
+                          .read(dashboardPageController.notifier)
+                          .setCurrentPage(
+                            currentPage: DashboardDrawerPages.adminPage,
+                          ),
                     )
-                  ],
-                ),
-
-                //! SPACER
-                AppScreenUtils.verticalSpaceMedium,
-
-                //! APP LOGO
-                !isDrawerOpen
-                    ? const DrawerIcon(imageURL: AppImages.urbanTransit)
-                        .generalPadding
-                    : Row(
+                : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                            //! IMAGE
-                            const DrawerIcon(imageURL: AppImages.urbanTransit),
+                        //! ICON
+                        const DrawerIcon(imageURL: AppImages.nileAdmin),
 
-                            //! SPACER
-                            AppScreenUtils.horizontalSpaceSmall,
+                        //! SPACER
+                        AppScreenUtils.horizontalSpaceSmall,
 
-                            Expanded(
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Visibility(
-                                  visible: isDrawerOpen,
-                                  child: Text(
-                                    AppTexts.urbanTransit,
-                                    style: textTheme.bodyLarge!
-                                        .copyWith(fontSize: 14.0, height: 1.0),
+                        //! TITLE
+                        Expanded(
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            child: Visibility(
+                              visible: isDrawerOpen,
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  text: "Hello, ",
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                ),
-                              ),
-                            )
-                          ]).generalPadding,
-
-                //! SPACER
-                AppScreenUtils.verticalSpaceMedium,
-
-                //! DIVIDER
-                const SizedBox(height: 0.8, child: Divider(thickness: 0.8)),
-
-                //! SPACER
-                AppScreenUtils.verticalSpaceMedium,
-
-                //!
-                //! OFFICE NAME
-                !isDrawerOpen
-                    ? const DrawerIcon(imageURL: AppImages.nileAdmin)
-                        .generalPadding
-                        .onTap(
-                          onTap: () => ref
-                              .read(dashboardPageController.notifier)
-                              .setCurrentPage(
-                                currentPage: DashboardDrawerPages.adminPage,
-                              ),
-                        )
-                    : Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                            //! ICON
-                            const DrawerIcon(imageURL: AppImages.nileAdmin),
-
-                            //! SPACER
-                            AppScreenUtils.horizontalSpaceSmall,
-
-                            //! TITLE
-                            Expanded(
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Visibility(
-                                  visible: isDrawerOpen,
-                                  child: RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                      text: "Hello, ",
-                                      style: textTheme.bodyMedium?.copyWith(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      children: [
-                                        //!TODO: ADD CORRECT ADMIN NAME HERE
-                                        TextSpan(
-                                          text: AppTexts.nileAdmin,
-                                          style: textTheme.bodyLarge!.copyWith(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w600),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                  children: [
+                                    //!TODO: ADD CORRECT ADMIN NAME HERE
+                                    TextSpan(
+                                      text: AppTexts.nileAdmin,
+                                      style: textTheme.bodyLarge!.copyWith(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ]).generalPadding.onTap(
-                          onTap: () => ref
-                              .read(dashboardPageController.notifier)
-                              .setCurrentPage(
-                                currentPage: DashboardDrawerPages.adminPage,
-                              ),
+                          ),
                         ),
+                      ]).generalPadding.onTap(
+                      onTap: () => ref
+                          .read(dashboardPageController.notifier)
+                          .setCurrentPage(
+                            currentPage: DashboardDrawerPages.adminPage,
+                          ),
+                    ),
 
-                //! SPACER
-                AppScreenUtils.verticalSpaceSmall,
+            //! SPACER
+            AppScreenUtils.verticalSpaceSmall,
 
-                //! OTHER OPTIONS
-                ...widget.listItems,
+            //! OTHER OPTIONS
+            ...widget.listItems,
 
-                const Spacer(),
+            const Spacer(),
 
-                const SizedBox(height: 0.8, child: Divider(thickness: 0.8)),
+            const SizedBox(height: 0.8, child: Divider(thickness: 0.8)),
 
-                AppScreenUtils.verticalSpaceSmall,
+            AppScreenUtils.verticalSpaceSmall,
 
-                DashboardDrawerOption(
-                  title: "Logout",
-                  logo: AppImages.logOut,
-                  logoColour: AppThemeColours.appRed,
-                  isDrawerOpen: isDrawerOpen,
-                  isCurrentPage: null,
-                  onTap: () =>
-                      AppNavigator.navigateToAndRemoveAllPreviousScreens(
-                    thePageRouteName: AppRoutes.loginScreen,
-                    context: context,
-                  ),
-                ),
-
-                //! SPACER
-                AppScreenUtils.verticalSpaceMedium
-              ],
+            DashboardDrawerOption(
+              title: "Logout",
+              logo: AppImages.logOut,
+              logoColour: AppThemeColours.appRed,
+              isDrawerOpen: isDrawerOpen,
+              isCurrentPage: null,
+              onTap: () => AppNavigator.navigateToAndRemoveAllPreviousScreens(
+                thePageRouteName: AppRoutes.loginScreen,
+                context: context,
+              ),
             ),
-          ),
-        );
-      },
 
-      //!
-      error: (error, stackTrace) => "$error $stackTrace".txt(),
-      loading: () => const CircularProgressIndicator(),
+            //! SPACER
+            AppScreenUtils.verticalSpaceMedium
+          ],
+        ),
+      ),
     );
   }
 }
