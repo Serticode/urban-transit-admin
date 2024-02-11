@@ -28,6 +28,7 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
         return Scaffold(
           body: GoogleMap(
             mapType: MapType.normal,
+            trafficEnabled: true,
             onMapCreated: (controller) async => await ref
                 .read(mapControllerProvider.notifier)
                 .init(controller: controller),
