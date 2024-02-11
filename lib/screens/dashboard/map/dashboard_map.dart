@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:urban_transit_admin/screens/dashboard/map/widgets/user_address_widget.dart";
 import "package:urban_transit_admin/services/controllers/map_controller.dart";
@@ -42,10 +43,11 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
                 position: controllerData.userLocation!,
                 onTap: () {
                   AppScreenUtils.showAppDialogBox(
-                      theBuildContext: context,
-                      width: 600,
-                      height: 200,
-                      child: const UserAddressWidget());
+                    theBuildContext: context,
+                    width: 600.0.w,
+                    height: 200.0.h,
+                    child: const UserAddressWidget(),
+                  );
                 },
               ),
 
