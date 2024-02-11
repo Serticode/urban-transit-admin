@@ -1,4 +1,3 @@
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -323,33 +322,39 @@ class DashboardDrawerOption extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ).generalPadding.onTap(onTap: onTap)
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //! ICON
-                    Transform.scale(
-                      scale: 0.6,
-                      filterQuality: FilterQuality.high,
-                      child: SvgPicture.asset(
-                        logo,
-                        colorFilter:
-                            ColorFilter.mode(logoColour, BlendMode.srcIn),
-                        fit: BoxFit.cover,
-                      ),
+              : SizedBox(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 12.0.h,
+                      horizontal: 21.0.w,
                     ),
+                    child: Visibility(
+                      visible: isDrawerOpen,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 30.0.w,
+                            child: Transform.scale(
+                              scale: 0.6,
+                              filterQuality: FilterQuality.high,
+                              child: SvgPicture.asset(
+                                logo,
+                                colorFilter: ColorFilter.mode(
+                                    logoColour, BlendMode.srcIn),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
 
-                    //! SPACER
-                    AppScreenUtils.horizontalSpaceMedium,
+                          AppScreenUtils.horizontalSpaceMedium,
 
-                    //! TITLE
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        child: Visibility(
-                          visible: isDrawerOpen,
-                          child: Text(
+                          //!
+                          Text(
                             title,
                             style: textTheme.bodyMedium?.copyWith(
                               fontWeight:
@@ -363,11 +368,11 @@ class DashboardDrawerOption extends StatelessWidget {
                                       : AppThemeColours.appGrey,
                             ),
                           ),
-                        ),
-                      ),
+                        ],
+                      ).onTap(onTap: onTap),
                     ),
-                  ],
-                ).generalPadding.onTap(onTap: onTap),
+                  ),
+                ),
     );
   }
 }
