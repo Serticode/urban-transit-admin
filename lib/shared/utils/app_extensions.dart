@@ -463,24 +463,17 @@ extension StyledTextExtension on String {
 }
 
 //!
-//! INKWELL EXTENSION ON WIDGET
-extension InkWellExtension on Widget {
-  InkWell onTap({
+//! GESTURE EXTENSION ON WIDGET
+extension GestureExtension on Widget {
+  GestureDetector onTap({
     required GestureTapCallback? onTap,
     GestureTapCallback? onDoubleTap,
     GestureLongPressCallback? onLongPress,
-    BorderRadius? borderRadius,
-    Color? splashColor = Colors.transparent,
-    Color? highlightColor = Colors.transparent,
   }) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       onDoubleTap: onDoubleTap,
       onLongPress: onLongPress,
-      borderRadius: borderRadius ?? BorderRadius.circular(12),
-      splashColor: splashColor,
-      highlightColor: highlightColor,
-      splashFactory: NoSplash.splashFactory,
       child: this,
     );
   }

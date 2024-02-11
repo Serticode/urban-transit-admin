@@ -1,41 +1,35 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum DriversPageDriversWidgetState { normal, isMaximized, isClosed }
 
 enum DriversPageInboxWidgetState { normal, isMaximized, isClosed }
 
-final driversPageDriversWidgetController = AsyncNotifierProvider<
+final driversPageDriversWidgetController = StateNotifierProvider<
     DriversPageDriversWidgetController, DriversPageDriversWidgetState>(
-  DriversPageDriversWidgetController.new,
+  (ref) => DriversPageDriversWidgetController(),
 );
 
 class DriversPageDriversWidgetController
-    extends AsyncNotifier<DriversPageDriversWidgetState> {
-  //!
-  @override
-  FutureOr<DriversPageDriversWidgetState> build() =>
-      DriversPageDriversWidgetState.isClosed;
+    extends StateNotifier<DriversPageDriversWidgetState> {
+  DriversPageDriversWidgetController()
+      : super(DriversPageDriversWidgetState.isClosed);
 
   void updateWidgetState({required DriversPageDriversWidgetState newState}) =>
-      state = AsyncValue.data(newState);
+      state = newState;
 }
 
 //!
 //!
-final driversPageInboxWidgetController = AsyncNotifierProvider<
+final driversPageInboxWidgetController = StateNotifierProvider<
     DriversPageInboxWidgetController, DriversPageInboxWidgetState>(
-  DriversPageInboxWidgetController.new,
+  (ref) => DriversPageInboxWidgetController(),
 );
 
 class DriversPageInboxWidgetController
-    extends AsyncNotifier<DriversPageInboxWidgetState> {
-  //!
-  @override
-  FutureOr<DriversPageInboxWidgetState> build() =>
-      DriversPageInboxWidgetState.isClosed;
+    extends StateNotifier<DriversPageInboxWidgetState> {
+  DriversPageInboxWidgetController()
+      : super(DriversPageInboxWidgetState.isClosed);
 
   void updateWidgetState({required DriversPageInboxWidgetState newState}) =>
-      state = AsyncValue.data(newState);
+      state = newState;
 }

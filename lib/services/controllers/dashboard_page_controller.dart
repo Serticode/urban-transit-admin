@@ -14,7 +14,7 @@ final dashboardPageController =
 );
 
 class DashboardPageController extends StateNotifier<DashboardDrawerPages> {
-  DashboardPageController() : super(DashboardDrawerPages.dashboardPage);
+  DashboardPageController() : super(DashboardDrawerPages.driversPage);
 
   void setCurrentPage({required DashboardDrawerPages currentPage}) =>
       state = currentPage;

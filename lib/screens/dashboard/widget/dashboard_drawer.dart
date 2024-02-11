@@ -369,7 +369,9 @@ class DashboardDrawerOption extends StatelessWidget {
                             ),
                           ),
                         ],
-                      ).onTap(onTap: onTap),
+                      ).onTap(
+                        onTap: onTap,
+                      ),
                     ),
                   ),
                 ),
