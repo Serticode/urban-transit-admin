@@ -22,61 +22,69 @@ class _DashboardMapState extends ConsumerState<DashboardMap>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final mapController = ref.watch(mapControllerProvider);
 
-    return mapController.when(
-      data: (controllerData) {
-        return Scaffold(
-          body: GoogleMap(
-            mapType: MapType.normal,
-            trafficEnabled: true,
-            onMapCreated: (controller) async => await ref
-                .read(mapControllerProvider.notifier)
-                .init(controller: controller),
-            initialCameraPosition: controllerData.cameraPosition!,
-            myLocationEnabled: true,
+    return Consumer(
+      builder: (context, ref, _) {
+        final mapController = ref.watch(mapControllerProvider);
 
-            //!
-            markers: {
-              Marker(
-                markerId: const MarkerId("userMarker"),
-                position: controllerData.userLocation!,
-                onTap: () {
-                  AppScreenUtils.showAppDialogBox(
-                    theBuildContext: context,
-                    width: 600.0.w,
-                    height: 200.0.h,
-                    child: const UserAddressWidget(),
-                  );
-                },
-              ),
-
-              //!
-              if (controllerData.markers != null) ...controllerData.markers!
-            },
-
-            //!
-            polylines: controllerData.polylines != null
-                ? controllerData.polylines!
-                : {},
-
-            //!
-            circles:
-                controllerData.circles != null ? controllerData.circles! : {},
-          ),
-
-          //!
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async =>
-                await ref.read(mapControllerProvider.notifier).updateDrivers(),
-            child: const Icon(Icons.refresh),
-          ),
+        return mapController.when(
+          data: (controllerData) => _buildMap(controllerData, context, ref),
+          error: (error, stackTrace) =>
+              "Error: $error \nS.T: $stackTrace".txt16(),
+          loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
+    );
+  }
+
+  Widget _buildMap(
+    MapControllerState controllerData,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    return Scaffold(
+      body: GoogleMap(
+        mapType: MapType.normal,
+        trafficEnabled: true,
+        onMapCreated: (controller) async => await ref
+            .read(mapControllerProvider.notifier)
+            .init(controller: controller),
+        initialCameraPosition: controllerData.cameraPosition!,
+        myLocationEnabled: true,
+        markers: _buildMarkers(controllerData, context),
+        polylines: controllerData.polylines ?? {},
+        circles: controllerData.circles ?? {},
+      ),
 
       //!
-      error: (error, stackTrace) => "Error: $error \nS.T: $stackTrace".txt16(),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async =>
+            await ref.read(mapControllerProvider.notifier).updateDrivers(),
+        child: const Icon(Icons.refresh),
+      ),
     );
+  }
+
+  Set<Marker> _buildMarkers(
+    MapControllerState controllerData,
+    BuildContext context,
+  ) {
+    final markers = <Marker>{
+      Marker(
+        markerId: const MarkerId("userMarker"),
+        position: controllerData.userLocation!,
+        onTap: () {
+          AppScreenUtils.showAppDialogBox(
+            theBuildContext: context,
+            width: 600.0.w,
+            height: 200.0.h,
+            child: const UserAddressWidget(),
+          );
+        },
+      ),
+      if (controllerData.markers != null) ...controllerData.markers!
+    };
+
+    return markers;
   }
 }

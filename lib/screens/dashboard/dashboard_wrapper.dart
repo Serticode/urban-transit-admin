@@ -205,6 +205,7 @@ class _DashboardWrapperState extends ConsumerState<DashboardWrapper>
                     .indexOf(ref.watch(dashboardPageController)!) ==
                 _menus.indexOf(element) + 1,
             title: element,
+            isNotificationIcon: _menus.indexOf(element) == 2 ? true : null,
             logo: _menuIcons.elementAt(_menus.indexOf(element)),
             logoColour: DashboardDrawerPages.values
                         .indexOf(ref.watch(dashboardPageController)!) ==

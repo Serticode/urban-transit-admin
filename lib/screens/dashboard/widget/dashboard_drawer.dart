@@ -285,6 +285,7 @@ class DashboardDrawerOption extends StatelessWidget {
   final Color logoColour;
   final bool? isCurrentPage;
   final bool isDrawerOpen;
+  final bool? isNotificationIcon;
   final void Function() onTap;
   const DashboardDrawerOption({
     super.key,
@@ -294,6 +295,7 @@ class DashboardDrawerOption extends StatelessWidget {
     required this.isDrawerOpen,
     required this.isCurrentPage,
     required this.logoColour,
+    this.isNotificationIcon,
   });
 
   @override
@@ -302,19 +304,16 @@ class DashboardDrawerOption extends StatelessWidget {
 
     return SizedBox(
       child: isDrawerOpen == false && isCurrentPage == true
-          ? Transform.scale(
-              scale: 0.75,
-              filterQuality: FilterQuality.high,
-              child: SvgPicture.asset(
-                logo,
-                colorFilter: ColorFilter.mode(logoColour, BlendMode.srcIn),
-                fit: BoxFit.cover,
-              ),
-            ).generalPadding.onTap(onTap: onTap)
-          : isDrawerOpen == false &&
-                  (isCurrentPage == false || isCurrentPage == null)
-              ? Transform.scale(
-                  scale: 0.65,
+          ? isNotificationIcon != null
+              ? SvgPicture.asset(
+                  logo,
+                  colorFilter: ColorFilter.mode(logoColour, BlendMode.srcIn),
+                  fit: BoxFit.cover,
+                  width: 15,
+                  height: 15,
+                ).generalPadding.onTap(onTap: onTap)
+              : Transform.scale(
+                  scale: 0.75,
                   filterQuality: FilterQuality.high,
                   child: SvgPicture.asset(
                     logo,
@@ -322,6 +321,27 @@ class DashboardDrawerOption extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ).generalPadding.onTap(onTap: onTap)
+          : isDrawerOpen == false &&
+                  (isCurrentPage == false || isCurrentPage == null)
+              ? isNotificationIcon != null
+                  ? SvgPicture.asset(
+                      logo,
+                      colorFilter:
+                          ColorFilter.mode(logoColour, BlendMode.srcIn),
+                      fit: BoxFit.cover,
+                      width: 15,
+                      height: 15,
+                    ).generalPadding.onTap(onTap: onTap)
+                  : Transform.scale(
+                      scale: 0.65,
+                      filterQuality: FilterQuality.high,
+                      child: SvgPicture.asset(
+                        logo,
+                        colorFilter:
+                            ColorFilter.mode(logoColour, BlendMode.srcIn),
+                        fit: BoxFit.cover,
+                      ),
+                    ).generalPadding.onTap(onTap: onTap)
               : SizedBox(
                   width: double.infinity,
                   child: SingleChildScrollView(
@@ -339,16 +359,23 @@ class DashboardDrawerOption extends StatelessWidget {
                         children: [
                           SizedBox(
                             width: 30.0.w,
-                            child: Transform.scale(
-                              scale: 0.6,
-                              filterQuality: FilterQuality.high,
-                              child: SvgPicture.asset(
-                                logo,
-                                colorFilter: ColorFilter.mode(
-                                    logoColour, BlendMode.srcIn),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            child: isNotificationIcon != null
+                                ? SvgPicture.asset(
+                                    logo,
+                                    colorFilter: ColorFilter.mode(
+                                        logoColour, BlendMode.srcIn),
+                                    fit: BoxFit.cover,
+                                  ).generalPadding.onTap(onTap: onTap)
+                                : Transform.scale(
+                                    scale: 0.6,
+                                    filterQuality: FilterQuality.high,
+                                    child: SvgPicture.asset(
+                                      logo,
+                                      colorFilter: ColorFilter.mode(
+                                          logoColour, BlendMode.srcIn),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                           ),
 
                           AppScreenUtils.horizontalSpaceMedium,
